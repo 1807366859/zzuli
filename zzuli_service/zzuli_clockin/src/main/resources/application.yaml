@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zzuli?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+  profiles:
+    active: dev
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 1807366859@qq.com
+    password: nlluhqsyjryobeig
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true
+server:
+  port: 8001
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false # 数据库下划线自动转驼峰标示关闭
+
+
+
