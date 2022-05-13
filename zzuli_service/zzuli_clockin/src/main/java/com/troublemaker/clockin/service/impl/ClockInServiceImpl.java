@@ -100,6 +100,7 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     public String submitData(HttpClient client, String url, String params, Header header) {
         //时差多少睡多久
         try {
+            System.out.println(timeDifference(url));
             Thread.sleep(timeDifference(url));
         } catch (InterruptedException e) {
             e.printStackTrace();
