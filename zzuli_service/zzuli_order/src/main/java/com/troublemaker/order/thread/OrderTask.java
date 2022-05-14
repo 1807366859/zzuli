@@ -95,13 +95,22 @@ public class OrderTask implements Runnable {
             String OID;
             try {
                 OID = selectionService.order(client, orderField);
-                System.out.println(selectionService.subMit(client, booker.getUsername(), OID));
+                String message = null;
+                for (int i = 0; i < 3; i++) {
+                    message = selectionService.subMit(client, booker.getUsername(), OID);
+                    System.out.println(Thread.currentThread().getName() +"第" + i+1 + "运行");
+                    if (message.equals("预订成功！")) {
+                        break;
+                    }
+                    Thread.sleep(2000);
+                }
+                System.out.println(message);
+//                System.out.println(selectionService.subMit(client, booker.getUsername(), OID));
                 //获取预定信息
 //                System.out.println(selectionService.getOrdered(client));
             } catch (MyException e) {
                 e.printStackTrace();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
