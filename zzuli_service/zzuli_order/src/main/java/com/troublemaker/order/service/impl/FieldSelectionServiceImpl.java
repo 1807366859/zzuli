@@ -121,7 +121,7 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         String jsonStr = doGetForEntity(client, url);
         JSONObject jsonObject = parseObject(jsonStr);
         if (jsonObject.get("resultdata") == null) {
-            throw new MyException("当前场地不可用,请重试,详情: " + "ORDER: " + "message: " + jsonObject.get("message"));
+            throw new MyException("message: " + jsonObject.get("message"));
         }
         return jsonObject.get("resultdata").toString();
     }

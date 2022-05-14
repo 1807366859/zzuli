@@ -104,7 +104,7 @@ public class OrderTask implements Runnable {
                 for (int i = 0; i < 3; i++) {
                     message = selectionService.subMit(client, booker.getUsername(), OID);
                     if (message.equals("预订成功！")) {
-                        log.info(booker.getUsername() + message + "预约信息: " + info);
+                        log.info(booker.getUsername() + message + "预约信息: " + info.getFieldName());
                         break;
                     } else {
                         Thread.sleep(2000);
@@ -113,7 +113,7 @@ public class OrderTask implements Runnable {
                 //获取预定信息
 //                System.out.println(selectionService.getOrdered(client));
             } catch (MyException e) {
-                log.error(booker.getUsername() + " 预约失败 " + info + " 异常信息: " + e);
+                log.error(booker.getUsername() + " 预约失败 " + info.getFieldName() + " 异常信息: " + e);
             }
         } catch (Exception e) {
             e.printStackTrace();
