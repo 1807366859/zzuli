@@ -9,6 +9,7 @@ import com.troublemaker.order.service.FieldSelectionService;
 import com.troublemaker.order.service.impl.FieldSelectionServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.HttpClient;
 
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.getClientNoSSL;
 @Component
 @Data
 @NoArgsConstructor
+@Slf4j
 public class OrderTask implements Runnable {
     private Booker booker;
     private CountDownLatch countDownLatch;
@@ -67,7 +69,6 @@ public class OrderTask implements Runnable {
         this.countDownLatch = countDownLatch;
     }
 
-
     @Override
     public void run() {
         try {
@@ -84,8 +85,10 @@ public class OrderTask implements Runnable {
             //对预定场所进行处理
             lock.lock();
             String orderField;
+            FieldInfo info;
             try {
-                orderField = selectionService.orderInvariableField(client, fieldInfos.get(number - 1));
+                info = fieldInfos.get(number - 1);
+                orderField = selectionService.orderInvariableField(client, info);
                 number--;
             } finally {
                 lock.unlock();
@@ -94,22 +97,23 @@ public class OrderTask implements Runnable {
             //预定并提交订单
             String OID;
             try {
+                //预约
                 OID = selectionService.order(client, orderField);
-                String message = null;
+                String message;
+                //提交
                 for (int i = 0; i < 3; i++) {
                     message = selectionService.subMit(client, booker.getUsername(), OID);
-                    System.out.println(Thread.currentThread().getName() +"第" + i+1 + "次运行");
                     if (message.equals("预订成功！")) {
+                        log.info(booker.getUsername() + message + "预约信息: " + info);
                         break;
+                    } else {
+                        Thread.sleep(2000);
                     }
-                    Thread.sleep(2000);
                 }
-                System.out.println(message);
-//                System.out.println(selectionService.subMit(client, booker.getUsername(), OID));
                 //获取预定信息
 //                System.out.println(selectionService.getOrdered(client));
             } catch (MyException e) {
-                e.printStackTrace();
+                log.error(booker.getUsername() + " 预约失败 " + info + " 异常信息: " + e);
             }
         } catch (Exception e) {
             e.printStackTrace();

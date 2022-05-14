@@ -5,6 +5,7 @@ import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.clockin.service.impl.ClockInServiceImpl;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 
@@ -21,6 +22,7 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.*;
  */
 @Data
 @Component
+@Slf4j
 public class ClockInTask implements Runnable {
     private ClockInService service = new ClockInServiceImpl();
     private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
@@ -65,7 +67,8 @@ public class ClockInTask implements Runnable {
             String finalData = service.finalData(inputData, user);
             //提交到服务器
             String clockInfo = service.submitData(client, addUrl, finalData, header);
-            System.out.println(clockInfo);
+            log.info(user.getUsername() + " " + clockInfo);
+//            System.out.println(clockInfo);
 
             //查看填报历史
             //https://msg.zzuli.edu.cn/xsc/log?type=0&code=

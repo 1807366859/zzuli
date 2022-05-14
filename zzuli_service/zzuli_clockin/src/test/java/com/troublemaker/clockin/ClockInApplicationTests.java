@@ -16,21 +16,14 @@ public class ClockInApplicationTests {
     private DoClockIn clockIn;
     @Autowired
     private DoClockInTask doClockInTask;
-    long start = 0, end = 0;
 
     @Test
     void contextLoads() {
-        start = System.currentTimeMillis();
         clockIn.start();
-        end = System.currentTimeMillis();
-        System.out.println("普通方法，耗时：" + (end - start) + "ms");
     }
 
     @Test
     void test1() {
-        start = System.currentTimeMillis();
         doClockInTask.start();
-        end = System.currentTimeMillis();
-        System.out.println("多线程方法，耗时：" + (end - start) + "ms");
     }
 }

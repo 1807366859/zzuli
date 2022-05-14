@@ -17,21 +17,14 @@ public class OrderApplicationTests {
     private DoOrder doOrder;
     @Autowired
     private DoOrderTask doOrdertask;
-    long start = 0, end = 0;
 
     @Test
     void contextLoads() {
-        start = System.currentTimeMillis();
         doOrder.start();
-        end = System.currentTimeMillis();
-        System.out.println("普通方法，耗时：" + (end - start) + "ms");
     }
 
     @Test
     public void test1() {
-        start = System.currentTimeMillis();
         doOrdertask.start();
-        end = System.currentTimeMillis();
-        System.out.println("多线程方法，耗时：" + (end - start) + "ms");
     }
 }
