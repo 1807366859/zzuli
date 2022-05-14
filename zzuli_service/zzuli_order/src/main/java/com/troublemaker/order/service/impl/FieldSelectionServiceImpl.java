@@ -146,7 +146,8 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
                 "&EWMNum=1" +
                 "&_=" + new Date().getTime();
         JSONObject jsonObject = parseObject(doGetForEntity(client, url));
-        return "OID: " + OID + ", SUBMIT: " + jsonObject.get("message").toString();
+//        return "OID: " + OID + ", SUBMIT: " + jsonObject.get("message").toString();
+        return jsonObject.get("message").toString();
     }
 
     //http://cgyy.zzuli.edu.cn/Field/GetFieldPayInfo?OID=247c1a8f-0fa3-445b-8276-c5519b56e721&_=1651384536006
