@@ -98,7 +98,7 @@ public class OrderTask implements Runnable {
                 String message = null;
                 for (int i = 0; i < 3; i++) {
                     message = selectionService.subMit(client, booker.getUsername(), OID);
-                    System.out.println(Thread.currentThread().getName() +"第" + i+1 + "运行");
+                    System.out.println(Thread.currentThread().getName() +"第" + i+1 + "次运行");
                     if (message.equals("预订成功！")) {
                         break;
                     }
