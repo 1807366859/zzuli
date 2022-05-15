@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 public class OrderRun {
     @Autowired
     private DoOrderTask doOrderTask;
+    public static long startTime;
 
     @Scheduled(cron = "0 0 7 * * ?")
     public void test1() {
+        startTime = System.currentTimeMillis();
         doOrderTask.start();
     }
 }

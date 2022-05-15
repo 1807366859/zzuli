@@ -31,7 +31,7 @@ public interface FieldSelectionService {
 
     String orderChangeableField(HttpClient client, List<FieldInfo> list);
 
-    String order(HttpClient client, String checData) throws MyException;
+    String order(HttpClient client, String checkData) throws MyException;
 
     String subMit(HttpClient client, String cardNo, String OID);
 

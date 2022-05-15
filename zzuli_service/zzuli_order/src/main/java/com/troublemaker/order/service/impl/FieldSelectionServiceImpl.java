@@ -11,6 +11,7 @@ import com.troublemaker.order.entity.TimePeriod;
 import com.troublemaker.order.exception.MyException;
 import com.troublemaker.order.mapper.BookerMapper;
 import com.troublemaker.order.service.FieldSelectionService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.HttpClient;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 import static com.alibaba.fastjson.JSON.*;
+import static com.troublemaker.order.OrderRun.startTime;
 import static com.troublemaker.utils.encryptionutils.EncryptionUtil.getBase64Password;
 import static com.troublemaker.utils.httputils.HttpClientUtils.doGetForEntity;
 import static com.troublemaker.utils.httputils.HttpClientUtils.timeDifference;
@@ -29,6 +31,7 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.timeDifference;
  * @date 2022- 04 25 17:55
  */
 @Service
+@Slf4j
 public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker> implements FieldSelectionService {
 
     @Override
@@ -113,8 +116,9 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     public String order(HttpClient client, String checkData) throws MyException {
         String url = "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;
         //时差多久,睡眠多久
+        long endTime = System.currentTimeMillis();
         try {
-            Thread.sleep(timeDifference(url));
+            Thread.sleep(timeDifference(url) - (endTime - startTime));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
