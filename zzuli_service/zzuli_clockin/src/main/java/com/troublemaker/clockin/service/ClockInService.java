@@ -27,7 +27,7 @@ public interface ClockInService {
     //登录认证
     String getLt(HttpClient client, String url);
 
-    String login(HttpClient client, String url, Map<String, String> map);
+    void login(HttpClient client, String url, Map<String, String> map);
 
     //通过打卡界面得到打卡链接
     String getCodeLink(HttpClient client, String url);

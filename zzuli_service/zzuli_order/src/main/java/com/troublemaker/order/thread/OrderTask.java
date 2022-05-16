@@ -1,12 +1,10 @@
 package com.troublemaker.order.thread;
 
 import com.troublemaker.clockin.service.ClockInService;
-import com.troublemaker.clockin.service.impl.ClockInServiceImpl;
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.FieldInfo;
 import com.troublemaker.order.exception.MyException;
 import com.troublemaker.order.service.FieldSelectionService;
-import com.troublemaker.order.service.impl.FieldSelectionServiceImpl;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +30,13 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.getClientNoSSL;
 public class OrderTask implements Runnable {
     private Booker booker;
     private CountDownLatch countDownLatch;
-    private FieldSelectionService selectionService = new FieldSelectionServiceImpl();
-    private ClockInService clockInService = new ClockInServiceImpl();
+    private FieldSelectionService selectionService;
+    private ClockInService clockInService;
+    private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
+    private static final String homeUrl = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
     private static ArrayList<FieldInfo> fieldInfos = new ArrayList<>();
     private static int number;
     static Lock lock = new ReentrantLock();
-    private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
-    private static final String homeUrl = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
-
     static {
         fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
         fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
@@ -60,13 +57,11 @@ public class OrderTask implements Runnable {
         number = fieldInfos.size();
     }
 
-    public static void setNumber(int number) {
-        OrderTask.number = number;
-    }
-
-    public OrderTask(Booker booker, CountDownLatch countDownLatch) {
+    public OrderTask(Booker booker, CountDownLatch countDownLatch, FieldSelectionService selectionService, ClockInService clockInService) {
         this.booker = booker;
         this.countDownLatch = countDownLatch;
+        this.selectionService = selectionService;
+        this.clockInService = clockInService;
     }
 
     @Override

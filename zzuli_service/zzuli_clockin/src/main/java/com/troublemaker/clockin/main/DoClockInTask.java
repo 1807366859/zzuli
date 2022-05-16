@@ -3,7 +3,7 @@ package com.troublemaker.clockin.main;
 import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.clockin.thread.ClockInTask;
-import org.springframework.beans.factory.BeanFactory;
+import com.troublemaker.utils.mail.SendMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +21,15 @@ public class DoClockInTask {
     @Autowired
     private ClockInService service;
 
+    @Autowired
+    private SendMail sendMail;
+
     public void start() {
         List<User> users = service.getUsers();
         ExecutorService executor = Executors.newFixedThreadPool(10);
         final CountDownLatch countDownLatch = new CountDownLatch(users.size());
         for (User user : users) {
-            executor.execute(new ClockInTask(user, countDownLatch));
+            executor.execute(new ClockInTask(user, countDownLatch, sendMail, service));
         }
         try {
             countDownLatch.await();

@@ -1,9 +1,11 @@
 package com.troublemaker.order.main;
 
+import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.service.FieldSelectionService;
 import com.troublemaker.order.thread.OrderTask;
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.troublemaker.order.thread.OrderTask.setNumber;
 
 
 /**
@@ -23,6 +24,8 @@ import static com.troublemaker.order.thread.OrderTask.setNumber;
 public class DoOrderTask {
     @Autowired
     private FieldSelectionService selectionService;
+    @Autowired
+    private ClockInService clockService;
 
     public void start() {
         List<Booker> bookers = selectionService.getBookers();
@@ -31,14 +34,13 @@ public class DoOrderTask {
         for (Booker booker : bookers) {
             //spring创建的对象是无参构造
             //手动new对象,spring无法自动注入属性，须在类中自己手动new好所自动注入的属性
-            executor.execute(new OrderTask(booker, countDownLatch));
+            executor.execute(new OrderTask(booker, countDownLatch, selectionService, clockService));
         }
         try {
             countDownLatch.await();
         } catch (Exception ignored) {
 
         } finally {
-            setNumber(bookers.size());
             executor.shutdown();
         }
     }

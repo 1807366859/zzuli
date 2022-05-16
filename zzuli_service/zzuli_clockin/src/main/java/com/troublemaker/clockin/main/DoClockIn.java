@@ -30,7 +30,7 @@ public class DoClockIn {
     private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
     private static final String codeUrl = "https://msg.zzuli.edu.cn/xsc/week?spm=1";
     private static final String addUrl = "https://msg.zzuli.edu.cn/xsc/add";
-    private static final String historyUrl = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
+//    private static final String historyUrl = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
     public void start() {
         List<User> users = service.getUsers();
@@ -58,25 +58,33 @@ public class DoClockIn {
 
                 //从数据库取其他字段数据
                 String finalData = service.finalData(inputData, user);
-                System.out.println(finalData);
-                //提交到服务器
-                String clockInfo = service.submitData(client, addUrl, finalData, header);
-                System.out.println(clockInfo);
 
+                //提交到服务器
+                int count = 0;
+                while (true) {
+                    count++;
+                    String clockInfo = service.submitData(client, addUrl, finalData, header);
+                    if (clockInfo.equals("{\"code\":0,\"message\":\"ok\"}")) {
+                        System.out.println(user.getUsername() + " " + clockInfo);
+                        sendMail.sendSimpleMail(user.getEmail(),"应某人😒要求，现已重新开启邮箱提醒功能！\n"+"🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");
+                        break;
+                        //发送邮件
+    //                if (parseObject(clockInfo).get("message").equals("ok")) {
+    //                    sendMail.sendSimpleMail(user.getEmail(), text);
+    //                }
+                    }
+                    if (count == 3){
+                        sendMail.sendSimpleMail(user.getEmail(),"由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
+                        break;
+                    }
+                }
                 //查看填报历史
                 //https://msg.zzuli.edu.cn/xsc/log?type=0&code=
-                String aesToUrl = getAesToUrl(user.getUsername(), historyUrl);
-
-                //邮件文本
-                String text = "打卡成功：" + aesToUrl;
-                //发送邮件
-                if (parseObject(clockInfo).get("message").equals("ok")) {
-                    sendMail.sendSimpleMail(user.getEmail(), text);
-                }
+//                String aesToUrl = getAesToUrl(user.getUsername(), historyUrl);
             } catch (Exception e) {
+                sendMail.sendSimpleMail(user.getEmail(),"由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
                 e.printStackTrace();
             }
         }
-
     }
 }

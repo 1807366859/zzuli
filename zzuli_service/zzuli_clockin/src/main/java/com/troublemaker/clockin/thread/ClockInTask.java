@@ -3,17 +3,15 @@ package com.troublemaker.clockin.thread;
 import com.troublemaker.clockin.entity.InputData;
 import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;
-import com.troublemaker.clockin.service.impl.ClockInServiceImpl;
+import com.troublemaker.utils.mail.SendMail;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
 
-import static com.troublemaker.utils.encryptionutils.EncryptionUtil.getAesToUrl;
 import static com.troublemaker.utils.httputils.HttpClientUtils.*;
 
 /**
@@ -21,23 +19,22 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.*;
  * @date 2022- 04 30 22:06
  */
 @Data
-@Component
 @Slf4j
 public class ClockInTask implements Runnable {
-    private ClockInService service = new ClockInServiceImpl();
+    private User user;
+    private CountDownLatch countDownLatch;
+    private SendMail sendMail;
+    private ClockInService service;
     private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
     private static final String codeUrl = "https://msg.zzuli.edu.cn/xsc/week?spm=1";
     private static final String addUrl = "https://msg.zzuli.edu.cn/xsc/add";
-    private static final String historyUrl = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
-    private User user;
-    private CountDownLatch countDownLatch;
+//    private static final String historyUrl = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
-    public ClockInTask() {
-    }
-
-    public ClockInTask(User user, CountDownLatch countDownLatch) {
+    public ClockInTask(User user, CountDownLatch countDownLatch, SendMail sendMail,ClockInService service) {
         this.user = user;
         this.countDownLatch = countDownLatch;
+        this.sendMail = sendMail;
+        this.service = service;
     }
 
     @Override
@@ -65,17 +62,29 @@ public class ClockInTask implements Runnable {
 
             //从数据库取其他字段数据
             String finalData = service.finalData(inputData, user);
-            //提交到服务器
-            String clockInfo = service.submitData(client, addUrl, finalData, header);
-            log.info(user.getUsername() + " " + clockInfo);
-//            System.out.println(clockInfo);
 
+            //提交到服务器
+            int count = 0;
+            while (true) {
+                count++;
+                String clockInfo = service.submitData(client, addUrl, finalData, header);
+                if (clockInfo.equals("{\"code\":0,\"message\":\"ok\"}")) {
+                    log.info(user.getUsername() + " " + clockInfo);
+                    sendMail.sendSimpleMail(user.getEmail(),"应某人😒要求，现已重新开启邮箱提醒功能！\n"+"🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");
+                    break;
+                }
+                if (count == 3){
+                    sendMail.sendSimpleMail(user.getEmail(),"由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
+                    break;
+                }
+            }
             //查看填报历史
             //https://msg.zzuli.edu.cn/xsc/log?type=0&code=
 //            String aesToUrl = getAesToUrl(user.getUsername(), historyUrl);
 //            System.out.println(aesToUrl);
         } catch (Exception e) {
             e.printStackTrace();
+            sendMail.sendSimpleMail(user.getEmail(),"由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
         } finally {
             countDownLatch.countDown();
         }

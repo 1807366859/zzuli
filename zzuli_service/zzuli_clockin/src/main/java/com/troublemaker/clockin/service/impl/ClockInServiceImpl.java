@@ -62,9 +62,9 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public String login(HttpClient client, String url, Map<String, String> map) {
+    public void login(HttpClient client, String url, Map<String, String> map) {
         String entityStr = doApplicationPost(client, url, map);
-        return Jsoup.parse(entityStr).select("title").html();
+//        return Jsoup.parse(entityStr).select("title").html();
     }
 
     @Override
