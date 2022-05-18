@@ -38,7 +38,7 @@ public class InputData {
         this.other = "无";
         this.jjymqk = "已完成接种";
         this.hsjcqk = "更多次";
-        this.last_time = "2022-05-07";
+        this.last_time = "2022-05-17";
         this.jkmzt = "绿色";
         this.wj_type = 1;
         this.yqgl = "否";

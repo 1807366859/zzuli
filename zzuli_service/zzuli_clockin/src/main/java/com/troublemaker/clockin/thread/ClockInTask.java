@@ -70,7 +70,7 @@ public class ClockInTask implements Runnable {
                 String clockInfo = service.submitData(client, addUrl, finalData, header);
                 if (clockInfo.equals("{\"code\":0,\"message\":\"ok\"}")) {
                     log.info(user.getUsername() + " " + clockInfo);
-                    sendMail.sendSimpleMail(user.getEmail(),"应某人😒要求，现已重新开启邮箱提醒功能！\n"+"🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");
+                    sendMail.sendSimpleMail(user.getEmail(),"🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");
                     break;
                 }
                 if (count == 3){
