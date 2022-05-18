@@ -117,8 +117,9 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         String url = "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;
         //时差多久,睡眠多久
         long endTime = System.currentTimeMillis();
+        long difference = timeDifference(url) - (endTime - startTime);
         try {
-            Thread.sleep(timeDifference(url) - (endTime - startTime));
+            Thread.sleep(difference > 0 ? difference : 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

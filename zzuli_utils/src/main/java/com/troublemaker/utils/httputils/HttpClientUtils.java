@@ -194,7 +194,8 @@ public class HttpClientUtils {
         } catch (IOException | java.text.ParseException e) {
             e.printStackTrace();
         }
-        return localDate - severDate;
+        long difference = localDate - severDate;
+        return difference > 0 ? difference : 0;
     }
 
 }

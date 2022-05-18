@@ -98,7 +98,7 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
 
     @Override
     public String submitData(HttpClient client, String url, String params, Header header) {
-        //时差多少睡多久
+//        时差多少睡多久
         try {
             Thread.sleep(timeDifference(url));
         } catch (InterruptedException e) {
