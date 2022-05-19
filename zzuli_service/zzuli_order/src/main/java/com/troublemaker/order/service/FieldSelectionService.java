@@ -22,6 +22,11 @@ public interface FieldSelectionService {
 
     Map<String, String> bookerToMap(Booker booker);
 
+    //登录认证
+    String getLt(HttpClient client, String url);
+
+    void login(HttpClient client, String url, Map<String, String> map);
+
     String getHomePage(HttpClient client, String url);
 
     //    private String selectUrl ="http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=0&VenueNo=001&FieldTypeNo=03&_=";

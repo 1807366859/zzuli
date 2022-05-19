@@ -1,6 +1,5 @@
 package com.troublemaker.order.main;
 
-import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.service.FieldSelectionService;
 import com.troublemaker.order.thread.OrderTask;
@@ -24,8 +23,6 @@ import java.util.concurrent.Executors;
 public class DoOrderTask {
     @Autowired
     private FieldSelectionService selectionService;
-    @Autowired
-    private ClockInService clockService;
 
     public void start() {
         List<Booker> bookers = selectionService.getBookers();
@@ -34,7 +31,7 @@ public class DoOrderTask {
         for (Booker booker : bookers) {
             //spring创建的对象是无参构造
             //手动new对象,spring无法自动注入属性，须在类中自己手动new好所自动注入的属性
-            executor.execute(new OrderTask(booker, countDownLatch, selectionService, clockService));
+            executor.execute(new OrderTask(booker, countDownLatch, selectionService));
         }
         try {
             countDownLatch.await();

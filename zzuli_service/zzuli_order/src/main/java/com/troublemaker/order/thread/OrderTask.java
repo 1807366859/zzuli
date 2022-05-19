@@ -1,6 +1,5 @@
 package com.troublemaker.order.thread;
 
-import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.FieldInfo;
 import com.troublemaker.order.exception.MyException;
@@ -31,7 +30,6 @@ public class OrderTask implements Runnable {
     private Booker booker;
     private CountDownLatch countDownLatch;
     private FieldSelectionService selectionService;
-    private ClockInService clockInService;
     private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
     private static final String homeUrl = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
     private static ArrayList<FieldInfo> fieldInfos = new ArrayList<>();
@@ -57,11 +55,10 @@ public class OrderTask implements Runnable {
         number = fieldInfos.size();
     }
 
-    public OrderTask(Booker booker, CountDownLatch countDownLatch, FieldSelectionService selectionService, ClockInService clockInService) {
+    public OrderTask(Booker booker, CountDownLatch countDownLatch, FieldSelectionService selectionService) {
         this.booker = booker;
         this.countDownLatch = countDownLatch;
         this.selectionService = selectionService;
-        this.clockInService = clockInService;
     }
 
     @Override
@@ -70,9 +67,9 @@ public class OrderTask implements Runnable {
             HttpClient client = getClientNoSSL();
 
             //登录
-            String lt = clockInService.getLt(client, loginUrl);
+            String lt = selectionService.getLt(client, loginUrl);
             booker.setLt(lt);
-            clockInService.login(client, loginUrl, selectionService.bookerToMap(booker));
+            selectionService.login(client, loginUrl, selectionService.bookerToMap(booker));
 
             //进个人中心拿cookie
             selectionService.getHomePage(client, homeUrl);

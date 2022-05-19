@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.alibaba.fastjson.JSON.parseObject;
-import static com.troublemaker.utils.encryptionutils.EncryptionUtil.getAesToUrl;
 import static com.troublemaker.utils.httputils.HttpClientUtils.getClientNoSSL;
 import static com.troublemaker.utils.httputils.HttpClientUtils.getHeader;
 

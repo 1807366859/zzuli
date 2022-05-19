@@ -1,7 +1,6 @@
 package com.troublemaker.order.main;
 
 
-import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.FieldInfo;
 import com.troublemaker.order.entity.FieldType;
@@ -25,8 +24,7 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.getClientNoSSL;
 public class DoOrder {
     @Autowired
     private FieldSelectionService selectionService;
-    @Autowired
-    private ClockInService clockInService;
+
     private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
     private static final String homeUrl = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
 
@@ -38,9 +36,9 @@ public class DoOrder {
             HttpClient client = getClientNoSSL();
 
             //登录
-            String lt = clockInService.getLt(client, loginUrl);
+            String lt = selectionService.getLt(client, loginUrl);
             booker.setLt(lt);
-            clockInService.login(client, loginUrl, selectionService.bookerToMap(booker));
+            selectionService.login(client, loginUrl, selectionService.bookerToMap(booker));
 
             //进个人中心拿cookie
             selectionService.getHomePage(client, homeUrl);

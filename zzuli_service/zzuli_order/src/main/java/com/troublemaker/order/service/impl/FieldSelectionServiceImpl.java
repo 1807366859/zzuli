@@ -14,6 +14,7 @@ import com.troublemaker.order.service.FieldSelectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.HttpClient;
 
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -23,8 +24,7 @@ import java.util.*;
 import static com.alibaba.fastjson.JSON.*;
 import static com.troublemaker.order.OrderRun.startTime;
 import static com.troublemaker.utils.encryptionutils.EncryptionUtil.getBase64Password;
-import static com.troublemaker.utils.httputils.HttpClientUtils.doGetForEntity;
-import static com.troublemaker.utils.httputils.HttpClientUtils.timeDifference;
+import static com.troublemaker.utils.httputils.HttpClientUtils.*;
 
 /**
  * @author Troublemaker
@@ -58,6 +58,18 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         bookerMap.put("secret", booker.getSecret());
         bookerMap.put("accountLogin", booker.getAccountLogin());
         return bookerMap;
+    }
+
+    @Override
+    public String getLt(HttpClient client, String url) {
+        String entityStr = doGetForEntity(client, url);
+        return Jsoup.parse(entityStr).select("[name='lt']").attr("value");
+    }
+
+    @Override
+    public void login(HttpClient client, String url, Map<String, String> map) {
+        String entityStr = doApplicationPost(client, url, map);
+//        return Jsoup.parse(entityStr).select("title").html();
     }
 
     //get  http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1
