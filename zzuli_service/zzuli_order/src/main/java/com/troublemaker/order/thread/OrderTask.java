@@ -35,23 +35,33 @@ public class OrderTask implements Runnable {
     private static ArrayList<FieldInfo> fieldInfos = new ArrayList<>();
     private static int number;
     static Lock lock = new ReentrantLock();
+
     static {
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ019", "羽毛球05-3", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ020", "羽毛球05-4", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
-        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ019", "羽毛球05-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ020", "羽毛球05-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ025", "羽毛球07-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ026", "羽毛球07-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ027", "羽毛球07-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ028", "羽毛球07-4", "03", "0.00", 1, 0));
+
 //        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
 //        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
 //        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ019", "羽毛球05-3", "03", "0.00", 1, 0));
 //        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ020", "羽毛球05-4", "03", "0.00", 1, 0));
-//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
-//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
-//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
-//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ025", "羽毛球07-1", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ026", "羽毛球07-2", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ027", "羽毛球07-3", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ028", "羽毛球07-4", "03", "0.00", 1, 0));
         number = fieldInfos.size();
     }
 
@@ -91,17 +101,17 @@ public class OrderTask implements Runnable {
             try {
                 //预约
                 OID = selectionService.order(client, orderField);
-                String message;
+                String message = null;
                 //提交
                 for (int i = 0; i < 3; i++) {
                     message = selectionService.subMit(client, booker.getUsername(), OID);
                     if (message.equals("预订成功！")) {
-                        log.info(booker.getUsername() + " " + message + "预约信息: " + info.getFieldName());
                         break;
                     } else {
                         Thread.sleep(2000);
                     }
                 }
+                log.info(booker.getUsername() + " " + info.getFieldName() + " 预约状态: " + message);
                 //获取预定信息
 //                System.out.println(selectionService.getOrdered(client));
             } catch (MyException e) {
