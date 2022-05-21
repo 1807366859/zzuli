@@ -22,7 +22,7 @@ public class ClockInRun {
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
-    public void test0() {
+    public void doClockIn() {
         //启动时间
         startTime = System.currentTimeMillis();
         doClockInTask.start();

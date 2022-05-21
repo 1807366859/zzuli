@@ -45,7 +45,7 @@ public class DoClockInTask {
         // handler          线程拒绝策略
         int capacity = 100;
         int corePoolSize = 20;
-        int maxMumPoolSize = 50;
+        int maxMumPoolSize = 40;
         int keepAliveSeconds = 5;
         ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(capacity);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
@@ -64,8 +64,7 @@ public class DoClockInTask {
 //                }
 //            }
 
-            // 或CallerRunsPolicy()策略, 即调用者执行该任务
-
+            // 或CallerRunsPolicy()策略, 即调用者(main)执行该任务
             poolExecutor.execute(new ClockInTask(user, countDownLatch, sendMail, service));
 
         }

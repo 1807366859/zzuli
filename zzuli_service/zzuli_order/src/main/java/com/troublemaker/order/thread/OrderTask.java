@@ -2,8 +2,6 @@ package com.troublemaker.order.thread;
 
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.FieldInfo;
-import com.troublemaker.order.entity.FieldType;
-import com.troublemaker.order.entity.TimePeriod;
 import com.troublemaker.order.exception.MyException;
 import com.troublemaker.order.service.FieldSelectionService;
 import lombok.Data;
@@ -14,7 +12,6 @@ import org.apache.http.client.HttpClient;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

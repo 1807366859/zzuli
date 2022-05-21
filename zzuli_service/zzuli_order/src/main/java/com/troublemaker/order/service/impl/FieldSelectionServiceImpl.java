@@ -115,7 +115,6 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         return objToJsonString(list.get(list.size() - 1));
     }
 
-
     @Override
     public String order(HttpClient client, String checkData) throws MyException {
         String url = "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;

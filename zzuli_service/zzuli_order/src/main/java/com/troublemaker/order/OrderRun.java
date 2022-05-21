@@ -20,7 +20,7 @@ public class OrderRun {
     }
 
     @Scheduled(cron = "0 0 7 * * ?")
-    public void test1() {
+    public void doOrder() {
         startTime = System.currentTimeMillis();
         doOrderTask.start();
     }
