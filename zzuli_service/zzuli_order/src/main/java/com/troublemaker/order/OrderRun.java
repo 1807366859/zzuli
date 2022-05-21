@@ -1,6 +1,6 @@
 package com.troublemaker.order;
 
-import com.troublemaker.order.task.DoOrderTask;
+import com.troublemaker.order.excute.DoOrderTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,9 +11,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OrderRun {
-    @Autowired
     private DoOrderTask doOrderTask;
     public static long startTime;
+
+    @Autowired
+    public void setDoOrderTask(DoOrderTask doOrderTask) {
+        this.doOrderTask = doOrderTask;
+    }
 
     @Scheduled(cron = "0 0 7 * * ?")
     public void test1() {

@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 public class UserController {
-    @Autowired
+
     private ClockInService service;
+
+    @Autowired
+    public void setService(ClockInService service) {
+        this.service = service;
+    }
 
     @PostMapping("/addUserInfo")
     public Integer addUserInfo(@RequestBody User user) {

@@ -61,7 +61,7 @@ public class HttpClientUtils {
             SSLContext ctx = SSLContext.getInstance(SSLConnectionSocketFactory.TLS);
             ctx.init(null, new TrustManager[]{trustManager}, null);
             SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(ctx, NoopHostnameVerifier.INSTANCE);
-            //  创建Registry
+            // 创建Registry
             RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD_STRICT)
                     .setExpectContinueEnabled(Boolean.TRUE).setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
                     .setProxyPreferredAuthSchemes(Collections.singletonList(AuthSchemes.BASIC))
@@ -69,30 +69,31 @@ public class HttpClientUtils {
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", PlainConnectionSocketFactory.INSTANCE)
                     .register("https", socketFactory).build();
-            // 创建ConnectionManager，添加Connection配置信息
 
+            // 请求头
             List<Header> headers = new ArrayList<>();
             headers.add(new BasicHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36"));
             headers.add(new BasicHeader("Accept-Encoding", "gzip,deflate"));
             headers.add(new BasicHeader("Accept-Language", "zh-CN"));
             headers.add(new BasicHeader("Connection", "Keep-Alive"));
 
+            // 创建ConnectionManager，添加Connection配置信息
             PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-            connectionManager.setMaxTotal(200);// 同时最多连接数
-            connectionManager.setDefaultMaxPerRoute(100);// 设置最大路由
+            // 同时最多连接数
+            connectionManager.setMaxTotal(200);
+            // 设置最大路由
+            connectionManager.setDefaultMaxPerRoute(100);
             // 1、MaxtTotal是整个池子的大小；
             // 2、DefaultMaxPerRoute是根据连接到的主机对MaxTotal的一个细分；比如：
             // MaxtTotal=400 DefaultMaxPerRoute=200
             // 而我只连接到http://www.abc.com时，到这个主机的并发最多只有200；而不是400；
             // 而我连接到http://www.bac.com 和
             // http://www.ccd.com时，到每个主机的并发最多只有200；即加起来是400（但不能超过400）；所以起作用的设置是DefaultMaxPerRoute
-
             return HttpClients.custom().setConnectionManager(connectionManager)
                     .setDefaultRequestConfig(requestConfig)
                     .setDefaultHeaders(headers)
                     .setRedirectStrategy(new LaxRedirectStrategy())
                     .build();
-
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -115,12 +116,9 @@ public class HttpClientUtils {
         try {
             HttpGet httpGet = new HttpGet(url);
             HttpResponse response = client.execute(httpGet);
-
             Header[] headers = response.getHeaders("Set-Cookie");
             // %3D换成=
             headerStr = Arrays.toString(headers).replace("%3D", "=");
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -185,11 +183,11 @@ public class HttpClientUtils {
         long localDate = 0;
         long severDate = 0;
         try {
-            DateFormat Gmt = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+            DateFormat gmt = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
             URL url = new URL(str);
-            localDate = new Date().getTime();
+            localDate = System.currentTimeMillis();
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            severDate = Gmt.parse(httpCon.getHeaderField("Date")).getTime();
+            severDate = gmt.parse(httpCon.getHeaderField("Date")).getTime();
 
         } catch (IOException | java.text.ParseException e) {
             e.printStackTrace();

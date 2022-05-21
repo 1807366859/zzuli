@@ -5,18 +5,21 @@ package com.troublemaker.order.entity;
  * @date 2022- 04 29 10:28
  */
 public enum TimePeriod {
+    //早
     MORNING("0"),
+    //中
     AFTERNOON("1"),
+    //晚
     NIGHT("2");
 
-    private final String timePeriodNO;
+    private final String timePeriodNo;
 
-    TimePeriod(String timePeriodNO) {
-        this.timePeriodNO = timePeriodNO;
+    TimePeriod(String timePeriodNo) {
+        this.timePeriodNo = timePeriodNo;
     }
 
-    public String getTimePeriodNO() {
-        return timePeriodNO;
+    public String getTimePeriodNo() {
+        return timePeriodNo;
     }
 }
 

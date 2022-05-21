@@ -2,6 +2,8 @@ package com.troublemaker.order.thread;
 
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.FieldInfo;
+import com.troublemaker.order.entity.FieldType;
+import com.troublemaker.order.entity.TimePeriod;
 import com.troublemaker.order.exception.MyException;
 import com.troublemaker.order.service.FieldSelectionService;
 import lombok.Data;
@@ -12,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,8 +33,8 @@ public class OrderTask implements Runnable {
     private Booker booker;
     private CountDownLatch countDownLatch;
     private FieldSelectionService selectionService;
-    private static final String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
-    private static final String homeUrl = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
+    private static final String LOGIN_URL = "http://kys.zzuli.edu.cn/cas/login";
+    private static final String HOME_URL = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
     private static ArrayList<FieldInfo> fieldInfos = new ArrayList<>();
     private static int number;
     static Lock lock = new ReentrantLock();
@@ -77,17 +80,16 @@ public class OrderTask implements Runnable {
             HttpClient client = getClientNoSSL();
 
             //登录
-            String lt = selectionService.getLt(client, loginUrl);
-            booker.setLt(lt);
-            selectionService.login(client, loginUrl, selectionService.bookerToMap(booker));
+            String lt = selectionService.getLt(client, LOGIN_URL);
+            selectionService.login(client, LOGIN_URL, selectionService.loginMap(booker, lt));
 
             //获取cookie
-            selectionService.getHomePage(client, homeUrl);
+            selectionService.getHomePage(client, HOME_URL);
 
             //对预定场所进行处理
-            lock.lock();
             String orderField;
             FieldInfo info;
+            lock.lock();
             try {
                 info = fieldInfos.get(number - 1);
                 orderField = selectionService.orderInvariableField(info);
@@ -97,23 +99,23 @@ public class OrderTask implements Runnable {
             }
 
             //预定并提交订单
-            String OID;
+            String oId;
             try {
                 //预约
-                OID = selectionService.order(client, orderField);
+                oId = selectionService.order(client, orderField);
+
                 String message = null;
                 //提交
-                for (int i = 0; i < 3; i++) {
-                    message = selectionService.subMit(client, booker.getUsername(), OID);
-                    if (message.equals("预订成功！")) {
+                int count = 3;
+                for (int i = 0; i < count; i++) {
+                    message = selectionService.subMit(client, booker.getUsername(), oId);
+                    if ("预订成功！".equals(message)) {
                         break;
                     } else {
                         Thread.sleep(2000);
                     }
                 }
                 log.info(booker.getUsername() + " " + info.getFieldName() + " 预约状态: " + message);
-                //获取预定信息
-//                System.out.println(selectionService.getOrdered(client));
             } catch (MyException e) {
                 log.error(booker.getUsername() + " 预约失败 " + info.getFieldName() + " 异常信息: " + e);
             }

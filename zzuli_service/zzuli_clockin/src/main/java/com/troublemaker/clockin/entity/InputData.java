@@ -2,7 +2,6 @@ package com.troublemaker.clockin.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,22 +13,22 @@ import java.util.Date;
 @Data
 public class InputData {
 
-    public InputData() {
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        this.date = sdf.format(d);
+    public InputData() {
+        Date day = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.date = simpleDateFormat.format(day);
         this.region = "科学校区";
         this.area = "宿舍区";
         this.lat = "34.817355";
         this.lon = "113.513509";
-        this.gcj_lat = "34.817355";
-        this.gcj_jon = "113.513509";
-        this.jz_address = "河南省郑州市中原区(郑州轻工业大学(科学校区))";
-        this.jz_province = "河南省";
-        this.jz_city = "郑州市";
-        this.jz_district = "中原区";
-        this.jz_sfyz = "是";
+        this.gcjLat = "34.817355";
+        this.gcjJon = "113.513509";
+        this.jzAddress = "河南省郑州市中原区(郑州轻工业大学(科学校区))";
+        this.jzProvince = "河南省";
+        this.jzCity = "郑州市";
+        this.jzDistrict = "中原区";
+        this.jzSfyz = "是";
         this.temp = "正常";
         this.jrzz = "无";
         this.stzk = "无";
@@ -37,16 +36,19 @@ public class InputData {
         this.other = "无";
         this.jjymqk = "已完成接种";
         this.hsjcqk = "更多次";
-        this.last_time = "2022-05-17";
+        this.lastTime = "2022-05-17";
         this.jkmzt = "绿色";
-        this.wj_type = 1;
+        this.wjType = 1;
         this.yqgl = "否";
-        this.qz_yqbl = "否";
+        this.qzYqbl = "否";
     }
 
-    private String user_code;
-    private String user_name;
-    private String id_card;
+    @JSONField(name = "user_code")
+    private String userCode;
+    @JSONField(name = "user_name")
+    private String userName;
+    @JSONField(name = "id_card")
+    private String idCard;
     private String date;
     private String sex;
     private Integer age;
@@ -58,7 +60,8 @@ public class InputData {
     @JSONField(name = "class")
     private String classX;
     private String mobile;
-    private String jt_mobile;
+    @JSONField(name = "jt_mobile")
+    private String jtMobile;
     private String org;
     private Integer year;
     private String province;
@@ -67,13 +70,20 @@ public class InputData {
     private String address;
     private String lat;
     private String lon;
-    private String gcj_lat;
-    private String gcj_jon;
-    private String jz_address;
-    private String jz_province;
-    private String jz_city;
-    private String jz_district;
-    private String jz_sfyz;
+    @JSONField(name = "gcj_lat")
+    private String gcjLat;
+    @JSONField(name = "gcj_jon")
+    private String gcjJon;
+    @JSONField(name = "jz_address")
+    private String jzAddress;
+    @JSONField(name = "jz_province")
+    private String jzProvince;
+    @JSONField(name = "jz_city")
+    private String jzCity;
+    @JSONField(name = "jz_district")
+    private String jzDistrict;
+    @JSONField(name = "jz_sfyz")
+    private String jzSfyz;
     private String temp;
     private String jrzz;
     private String stzk;
@@ -81,9 +91,12 @@ public class InputData {
     private String other;
     private String jjymqk;
     private String hsjcqk;
-    private String last_time;
+    @JSONField(name = "last_time")
+    private String lastTime;
     private String jkmzt;
-    private Integer wj_type;
+    @JSONField(name = "wj_type")
+    private Integer wjType;
     private String yqgl;
-    private String qz_yqbl;
+    @JSONField(name = "qz_yqbl")
+    private String qzYqbl;
 }

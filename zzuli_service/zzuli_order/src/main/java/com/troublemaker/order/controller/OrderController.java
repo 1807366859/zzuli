@@ -15,8 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public class OrderController {
-    @Autowired
+
     FieldSelectionService selectionService;
+
+    @Autowired
+    public void setSelectionService(FieldSelectionService selectionService) {
+        this.selectionService = selectionService;
+    }
+
     @PostMapping("/addBookerInfo")
     public Integer addBooker(@RequestBody Booker booker) {
         return  selectionService.addBooker(booker);

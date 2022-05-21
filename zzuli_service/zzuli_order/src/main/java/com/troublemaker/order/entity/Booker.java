@@ -16,14 +16,4 @@ public class Booker {
     private String id;
     private String username;
     private String password;
-    @TableField(exist = false)
-    private String secret = "";
-    @TableField(exist = false)
-    private String accountLogin = "";
-    @TableField(exist = false)
-    private String lt = "";
-    @TableField(exist = false)
-    private String execution = "e1s1";
-    @TableField(exist = false)
-    private String _eventId = "submit";
 }

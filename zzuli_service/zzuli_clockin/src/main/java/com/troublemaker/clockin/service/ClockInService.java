@@ -18,7 +18,7 @@ public interface ClockInService {
 
     List<User> getUsers();
 
-    Map<String, String> userToMap(User user);
+    Map<String, String> loginMap(User user,String lt);
 
     String getLt(HttpClient client, String url);
 

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.beans.Transient;
 
 /**
  * @author Troublemaker
@@ -16,31 +15,27 @@ import java.beans.Transient;
 @NoArgsConstructor
 public class FieldInfo {
     @JSONField(name = "BeginTime")
-    private String BeginTime;
+    private String beginTime;
     @JSONField(name = "EndTime")
-    private String EndTime;
+    private String endTime;
     @JSONField(name = "FieldNo")
-    private String FieldNo;
+    private String fieldNo;
     @JSONField(name = "FieldName")
-    private String FieldName;
+    private String fieldName;
     @JSONField(name = "FieldTypeNo")
-    private String FieldTypeNo;
+    private String fieldTypeNo;
     @JSONField(name = "Price")
-    private String Price;
-    private int TimeStatus;
-    private int FieldState;
+    private String price;
+    @JSONField(name = "TimeStatus", serialize = false)
+    private int timeStatus;
+    @JSONField(name = "TimeStatus", serialize = false)
+    private int fieldState;
 
+    // 由于序列化和反序列化过程中，字段均不一致
+    // 手动set实现反序列化
+    // @JSONField(name = "Price")实现序列化
     public void setFinalPrice(String price) {
-        Price = price;
+        this.price = price;
     }
 
-    @Transient
-    public int getTimeStatus() {
-        return TimeStatus;
-    }
-
-    @Transient
-    public int getFieldState() {
-        return FieldState;
-    }
 }

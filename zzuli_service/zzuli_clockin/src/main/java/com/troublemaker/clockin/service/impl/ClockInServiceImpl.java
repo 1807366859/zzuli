@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static com.alibaba.fastjson.JSON.parseObject;
 import static com.alibaba.fastjson.JSON.toJSONString;
+import static com.troublemaker.clockin.ClockInRun.startTime;
 import static com.troublemaker.utils.encryptionutils.EncryptionUtil.getBase64Password;
 import static com.troublemaker.utils.httputils.HttpClientUtils.*;
 
@@ -39,19 +40,19 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public Map<String, String> userToMap(User user) {
+    public Map<String, String> loginMap(User user, String lt) {
         //Base64加密
         user.setPassword(getBase64Password(user.getPassword()));
         //转为map
-        HashMap<String, String> userMap = new HashMap<>();
-        userMap.put("username", user.getUsername());
-        userMap.put("password", user.getPassword());
-        userMap.put("lt", user.getLt());
-        userMap.put("execution", user.getExecution());
-        userMap.put("_eventId", user.get_eventId());
-        userMap.put("secret", user.getSecret());
-        userMap.put("accountLogin", user.getAccountLogin());
-        return userMap;
+        HashMap<String, String> loginMap = new HashMap<>(1);
+        loginMap.put("username", user.getUsername());
+        loginMap.put("password", user.getPassword());
+        loginMap.put("secret", "");
+        loginMap.put("accountLogin", "");
+        loginMap.put("lt", lt);
+        loginMap.put("execution", "e1s1");
+        loginMap.put("_eventId", "submit");
+        return loginMap;
     }
 
     @Override
@@ -74,8 +75,8 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
 
     @Override
     public String getToken(HttpClient client, String url) {
-        String Headers = doGetForHeaders(client, url);
-        String subHeader = Headers.substring(0, Headers.indexOf(";"));
+        String headers = doGetForHeaders(client, url);
+        String subHeader = headers.substring(0, headers.indexOf(";"));
         String token = subHeader.substring(subHeader.indexOf("="));
         return token.substring(1);
     }
@@ -91,15 +92,20 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
         inputData.setBuild(user.getBuild());
         inputData.setDorm(user.getDorm());
         inputData.setMobile(user.getMobile());
-        inputData.setJt_mobile(user.getJt_mobile());
+        inputData.setJtMobile(user.getJtMobile());
         return toJSONString(inputData);
     }
 
     @Override
     public String submitData(HttpClient client, String url, String params, Header header) {
-//        时差多少睡多久
+        //线程抵达时间
+        long endTime = System.currentTimeMillis();
+        //从程序启动到线程抵达所用时间与服务器的时时间的时差
+        long difference = timeDifference(url) - (endTime - startTime);
         try {
-            Thread.sleep(timeDifference(url));
+            //比服务器慢多少就睡眠多少
+            //否则直接执行
+            Thread.sleep(difference > 0 ? difference : 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

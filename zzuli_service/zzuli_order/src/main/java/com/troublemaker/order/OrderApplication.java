@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author Troublemaker
  * @date 2022- 04 29 10:48
  */
-@EnableScheduling // 开启定时任务功能
+@EnableScheduling
 @SpringBootApplication
 @ComponentScan(basePackages = "com.troublemaker")
 public class OrderApplication {

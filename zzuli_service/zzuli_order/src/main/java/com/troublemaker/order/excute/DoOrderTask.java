@@ -1,4 +1,4 @@
-package com.troublemaker.order.task;
+package com.troublemaker.order.excute;
 
 import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.service.FieldSelectionService;
@@ -26,7 +26,8 @@ public class DoOrderTask {
 
     public void start() {
         List<Booker> bookers = selectionService.getBookers();
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        //数量较少，有多少数据创建多少线程
+        ExecutorService executor = Executors.newFixedThreadPool(bookers.size());
         final CountDownLatch countDownLatch = new CountDownLatch(bookers.size());
         for (Booker booker : bookers) {
             executor.execute(new OrderTask(booker, countDownLatch, selectionService));
