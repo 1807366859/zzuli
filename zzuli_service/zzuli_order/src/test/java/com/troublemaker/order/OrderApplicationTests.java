@@ -1,7 +1,6 @@
 package com.troublemaker.order;
 
-import com.troublemaker.order.main.DoOrder;
-import com.troublemaker.order.main.DoOrderTask;
+import com.troublemaker.order.task.DoOrderTask;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,18 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class OrderApplicationTests {
-    @Autowired
-    private DoOrder doOrder;
+
     @Autowired
     private DoOrderTask doOrdertask;
 
     @Test
     void contextLoads() {
-        doOrder.start();
-    }
-
-    @Test
-    public void test1() {
         doOrdertask.start();
     }
+
 }

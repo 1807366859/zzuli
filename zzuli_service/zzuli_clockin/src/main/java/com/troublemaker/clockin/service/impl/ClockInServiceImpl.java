@@ -1,7 +1,6 @@
 package com.troublemaker.clockin.service.impl;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.troublemaker.clockin.entity.InputData;
 import com.troublemaker.clockin.entity.User;
@@ -63,7 +62,7 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
 
     @Override
     public void login(HttpClient client, String url, Map<String, String> map) {
-        String entityStr = doApplicationPost(client, url, map);
+        doApplicationPost(client, url, map);
 //        return Jsoup.parse(entityStr).select("title").html();
     }
 

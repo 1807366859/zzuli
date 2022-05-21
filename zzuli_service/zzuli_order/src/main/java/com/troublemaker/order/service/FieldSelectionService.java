@@ -22,19 +22,19 @@ public interface FieldSelectionService {
 
     Map<String, String> bookerToMap(Booker booker);
 
-    //登录认证
     String getLt(HttpClient client, String url);
 
     void login(HttpClient client, String url, Map<String, String> map);
 
-    String getHomePage(HttpClient client, String url);
+    void getHomePage(HttpClient client, String url);
 
-    //    private String selectUrl ="http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=0&VenueNo=001&FieldTypeNo=03&_=";
     List<FieldInfo> getOptionalFieldInfo(HttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod);
 
-    String orderInvariableField(HttpClient client, FieldInfo fieldInfo);
+    String objToJsonString(FieldInfo fieldInfo);
 
-    String orderChangeableField(HttpClient client, List<FieldInfo> list);
+    String orderInvariableField(FieldInfo fieldInfo);
+
+    String orderChangeableField(List<FieldInfo> list);
 
     String order(HttpClient client, String checkData) throws MyException;
 

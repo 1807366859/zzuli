@@ -1,4 +1,4 @@
-package com.troublemaker.clockin.main;
+package com.troublemaker.clockin.task;
 
 import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;

@@ -1,6 +1,6 @@
 package com.troublemaker.order;
 
-import com.troublemaker.order.main.DoOrderTask;
+import com.troublemaker.order.task.DoOrderTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

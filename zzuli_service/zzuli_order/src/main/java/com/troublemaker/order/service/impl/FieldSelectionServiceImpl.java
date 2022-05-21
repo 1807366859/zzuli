@@ -60,47 +60,85 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         return bookerMap;
     }
 
+    /**
+     * @description: get  http://kys.zzuli.edu.cn/cas/login
+     *获取登录所需的隐藏域lt的值
+     * @author: troublemaker
+     * @date:  9:49
+     * @param: [client, url]
+     * @return: java.lang.String
+     **/
     @Override
     public String getLt(HttpClient client, String url) {
         String entityStr = doGetForEntity(client, url);
         return Jsoup.parse(entityStr).select("[name='lt']").attr("value");
     }
 
+    /**
+     * @description: post  http://kys.zzuli.edu.cn/cas/login
+     * 登录认证
+     * @author: troublemaker
+     * @date:  9:51
+     * @param: [client, url, map]
+     * @return: void
+     **/
     @Override
     public void login(HttpClient client, String url, Map<String, String> map) {
-        String entityStr = doApplicationPost(client, url, map);
+        doApplicationPost(client, url, map);
 //        return Jsoup.parse(entityStr).select("title").html();
     }
 
-    //get  http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1
+    /**
+     * @description: get  http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1
+     * 获取cookie值
+     * @author: troublemaker
+     * @date:  9:52
+     * @param: [client, url]
+     * @return: void
+     **/
     @Override
-    public String getHomePage(HttpClient client, String url) {
-        return doGetForEntity(client, url);
+    public void getHomePage(HttpClient client, String url) {
+         doGetForEntity(client, url);
     }
 
+    /**
+     * @description: get "http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=" +
+     *                     timePeriod.getTimePeriodNO() +
+     *                     "&VenueNo=001&FieldTypeNo=" +
+     *                     fieldTypeNo.getFieldTypeNo() +
+     *                     "&_=" + new Date().getTime();
+     * 获取可选的场所信息，支持羽毛球，乒乓球等，及早，中，晚的不同组合。
+     * @author: troublemaker
+     * @date:  9:52
+     * @param: [client, fieldTypeNo, timePeriod]
+     * @return: java.util.List<com.troublemaker.order.entity.FieldInfo>
+     **/
     @Override
     public List<FieldInfo> getOptionalFieldInfo(HttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod) throws NullPointerException {
-        synchronized (this) {
-            //"http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=0&VenueNo=001&FieldTypeNo=03&_=";
-            String selectUrl = "http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=" + timePeriod.getTimePeriodNO() +
-                    "&VenueNo=001&FieldTypeNo=" + fieldTypeNo.getFieldTypeNo() +
+            String selectUrl = "http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=" +
+                    timePeriod.getTimePeriodNO() +
+                    "&VenueNo=001&FieldTypeNo=" +
+                    fieldTypeNo.getFieldTypeNo() +
                     "&_=" + new Date().getTime();
             String entityStr = doGetForEntity(client, selectUrl);
-            //获取所有场所的json信息
             String resultdata = parseObject(entityStr).getString(("resultdata"));
-            //将json信息转为javabean对象集合
             List<FieldInfo> list = parseArray(resultdata, FieldInfo.class);
             list.removeIf(fieldInfo -> fieldInfo.getFieldState() != 0 || fieldInfo.getTimeStatus() != 1);
             if (list.size() == 0) {
-                throw new NullPointerException("当前可选场所的个数：" + list.size() + " ,请稍后再试。");
+                throw new NullPointerException("当前无可选场所，请重试。");
             }
             return list;
-        }
-
     }
 
+    /**
+     * @description: 将选择的场所java对象转化为服务器接受的json字符串
+     * @author: troublemaker
+     * @date:  9:55
+     * @param: [fieldInfo]
+     * @return: java.lang.String
+     **/
     @Override
-    public String orderInvariableField(HttpClient client, FieldInfo fieldInfo) {
+    public String objToJsonString(FieldInfo fieldInfo) {
         String selectStr = null;
         String str = "[" + JSONObject.toJSONString(fieldInfo) + "]";
         try {
@@ -111,19 +149,38 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         return selectStr;
     }
 
+    /**
+     * @description: 当然，你也可以直接定义java对象，不需要通过服务器获取可选场地的信息，这样可以更快。
+     * 格式如下: new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0)
+     * @author: troublemaker
+     * @date:  9:58
+     * @param: [fieldInfo]
+     * @return: java.lang.String
+     **/
     @Override
-    public String orderChangeableField(HttpClient client, List<FieldInfo> list) {
-        String selectStr = null;
-        String str = "[" + JSONObject.toJSONString(list.get(list.size() - 1)) + "]";
-        try {
-            selectStr = URLEncoder.encode(str, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("选择信息: " + str);
-        return selectStr;
+    public String orderInvariableField(FieldInfo fieldInfo) {
+        return objToJsonString(fieldInfo);
     }
 
+    /**
+     * @description: 根据获取的可选场地的集合,自定义获取对象，这里默认取集合中元素的最后一个。
+     * @author: troublemaker
+     * @date:  9:37
+     * @param: [client, list]
+     * @return: java.lang.String
+     **/
+    @Override
+    public String orderChangeableField(List<FieldInfo> list) {
+        return objToJsonString(list.get(list.size() - 1));
+    }
+
+    /**
+     * @description: get "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;
+     * @author: troublemaker
+     * @date:  9:57
+     * @param: [client, checkData]
+     * @return: java.lang.String
+     **/
     @Override
     public String order(HttpClient client, String checkData) throws MyException {
         String url = "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;
@@ -143,6 +200,28 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         return jsonObject.get("resultdata").toString();
     }
 
+    /**
+     * @description: get "http://cgyy.zzuli.edu.cn/Field/CardPay?" +
+     *                 "PayNo=02" +
+     *                 "&Money=0" +
+     *                 "&CardMoney=1" +
+     *                 "&Count=0.00" +
+     *                 "&MemberNo=" +
+     *                 "&CardNo=" + cardNo +
+     *                 "&BillType=100" +
+     *                 "&Password=" +
+     *                 "&IsCheckPassword=0" +
+     *                 "&OID=" + OID +
+     *                 "&VenueNo=001" +
+     *                 "&PayDiscount=100" +
+     *                 "&IsUseMemberType=1" +
+     *                 "&EWMNum=1" +
+     *                 "&_=" + new Date().getTime();
+     * @author: troublemaker
+     * @date:  10:05
+     * @param: [client, cardNo, OID]
+     * @return: java.lang.String
+     **/
     @Override
     public String subMit(HttpClient client, String cardNo, String OID) {
         String url = "http://cgyy.zzuli.edu.cn/Field/CardPay?" +
@@ -166,7 +245,15 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         return jsonObject.get("message").toString();
     }
 
-    //http://cgyy.zzuli.edu.cn/Field/GetFieldPayInfo?OID=247c1a8f-0fa3-445b-8276-c5519b56e721&_=1651384536006
+    /**
+     * @description: get "http://cgyy.zzuli.edu.cn/Field/GetFieldOrder?PageNum=1&PageSize=6&Condition=" +
+     *                 "&_=" + new Date().getTime();
+     * 可以获取已提交的所有订单，默认获取第一个。
+     * @author: troublemaker
+     * @date:  10:02
+     * @param: [client]
+     * @return: java.lang.String
+     **/
     @Override
     public String getOrdered(HttpClient client) {
         String url = "http://cgyy.zzuli.edu.cn/Field/GetFieldOrder?PageNum=1&PageSize=6&Condition=" +

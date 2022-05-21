@@ -45,7 +45,7 @@ public class ClockInTask implements Runnable {
             user.setLt(service.getLt(client, loginUrl));
             service.login(client, loginUrl, service.userToMap(user));
 
-            //获得打卡链接https://msg.zzuli.edu.cn/morn/view?from=&code=8003df88*****0e7a2d63
+            //获得打卡链接
             String link = service.getCodeLink(client, codeUrl);
 
             //获得TOKEN
@@ -53,14 +53,11 @@ public class ClockInTask implements Runnable {
             Header header = getHeader("X-XSRF-TOKEN", token);
 
             //从服务器获得打卡数据
-            //https://msg.zzuli.edu.cn/xsc/get_user_info?code=8003df88*****0e7a2d63&wj_type=1
-            //拼接链接
             String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=1";
             userInfoUrl += link.substring(link.lastIndexOf("&"));
-            //获取数据
             InputData inputData = service.getInfoFromServer(client, userInfoUrl);
 
-            //从数据库取其他字段数据
+            //填充其他字段数据
             String finalData = service.finalData(inputData, user);
 
             //提交到服务器

@@ -1,7 +1,6 @@
 package com.troublemaker.clockin;
 
-import com.troublemaker.clockin.main.DoClockIn;
-import com.troublemaker.clockin.main.DoClockInTask;
+import com.troublemaker.clockin.task.DoClockInTask;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,18 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class ClockInApplicationTests {
-    @Autowired
-    private DoClockIn clockIn;
+
     @Autowired
     private DoClockInTask doClockInTask;
 
     @Test
     void contextLoads() {
-        clockIn.start();
-    }
-
-    @Test
-    void test1() {
         doClockInTask.start();
     }
+
+
 }

@@ -15,7 +15,6 @@ import java.util.Date;
 public class InputData {
 
     public InputData() {
-        //日期
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

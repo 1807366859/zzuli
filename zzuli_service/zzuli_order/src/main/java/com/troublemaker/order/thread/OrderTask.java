@@ -81,7 +81,7 @@ public class OrderTask implements Runnable {
             booker.setLt(lt);
             selectionService.login(client, loginUrl, selectionService.bookerToMap(booker));
 
-            //进个人中心拿cookie
+            //获取cookie
             selectionService.getHomePage(client, homeUrl);
 
             //对预定场所进行处理
@@ -90,7 +90,7 @@ public class OrderTask implements Runnable {
             FieldInfo info;
             try {
                 info = fieldInfos.get(number - 1);
-                orderField = selectionService.orderInvariableField(client, info);
+                orderField = selectionService.orderInvariableField(info);
                 number--;
             } finally {
                 lock.unlock();
