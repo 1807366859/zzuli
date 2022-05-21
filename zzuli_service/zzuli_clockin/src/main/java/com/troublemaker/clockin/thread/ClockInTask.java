@@ -80,6 +80,7 @@ public class ClockInTask implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            log.info("异常: "+ e);
             sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
         } finally {
             countDownLatch.countDown();

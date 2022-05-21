@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class OrderController {
 
-    FieldSelectionService selectionService;
+    private FieldSelectionService selectionService;
 
     @Autowired
     public void setSelectionService(FieldSelectionService selectionService) {

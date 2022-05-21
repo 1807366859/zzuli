@@ -21,8 +21,12 @@ import java.util.concurrent.Executors;
  */
 @Component
 public class DoOrderTask {
-    @Autowired
     private FieldSelectionService selectionService;
+
+    @Autowired
+    public void setSelectionService(FieldSelectionService selectionService) {
+        this.selectionService = selectionService;
+    }
 
     public void start() {
         List<Booker> bookers = selectionService.getBookers();

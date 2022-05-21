@@ -13,12 +13,16 @@ import java.util.Date;
  */
 @Component
 public class SendMail {
-    @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    public void setJavaMailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public void sendSimpleMail(String email, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("疫情自动打卡小助手");
+        message.setSubject("疫情打卡小助手");
         message.setFrom("1807366859@qq.com");
         message.setTo(email);
         message.setSentDate(new Date());

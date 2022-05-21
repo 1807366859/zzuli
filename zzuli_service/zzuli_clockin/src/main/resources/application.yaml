@@ -7,15 +7,24 @@ spring:
   profiles:
     active: dev
   mail:
+    port: 465
     host: smtp.qq.com
-    port: 587
     username: 1807366859@qq.com
     password: nlluhqsyjryobeig
-    default-encoding: UTF-8
+    default-encoding: utf-8
+    protocol: smtp
     properties:
       mail:
         smtp:
-          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            socketFactory:
+              port: 465
+              class: javax.net.ssl.SSLSocketFactory
         debug: true
 server:
   port: 6666
