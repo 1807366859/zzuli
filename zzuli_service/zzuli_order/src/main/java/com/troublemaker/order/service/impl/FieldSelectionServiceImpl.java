@@ -76,6 +76,35 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
         doGetForEntity(client, url);
     }
 
+    public List<FieldInfo> getSelfSetFieldInfos() {
+        List<FieldInfo> fieldInfos = new ArrayList<>();
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ019", "羽毛球05-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ020", "羽毛球05-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ025", "羽毛球07-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ026", "羽毛球07-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ027", "羽毛球07-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ028", "羽毛球07-4", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ018", "羽毛球05-2", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ019", "羽毛球05-3", "03", "0.00", 1, 0));
+//        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ020", "羽毛球05-4", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ021", "羽毛球06-1", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ022", "羽毛球06-2", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ023", "羽毛球06-3", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ024", "羽毛球06-4", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ025", "羽毛球07-1", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ026", "羽毛球07-2", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ027", "羽毛球07-3", "03", "0.00", 1, 0));
+        fieldInfos.add(new FieldInfo("20:30", "21:30", "YMQ028", "羽毛球07-4", "03", "0.00", 1, 0));
+        return fieldInfos;
+    }
+
     @Override
     public List<FieldInfo> getOptionalFieldInfo(HttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod) throws NullPointerException {
         String selectUrl = "http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=" +

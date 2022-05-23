@@ -66,7 +66,6 @@ public class DoClockInTask {
 
             // 或CallerRunsPolicy()策略, 即调用者(main)执行该任务
             poolExecutor.execute(new ClockInTask(user, countDownLatch, sendMail, service));
-
         }
         try {
             countDownLatch.await();
