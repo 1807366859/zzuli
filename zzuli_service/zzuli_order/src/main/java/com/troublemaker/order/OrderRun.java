@@ -22,7 +22,7 @@ public class OrderRun {
     }
 
     @Scheduled(cron = "0 0 7 * * ?")
-    public void doOrder1() {
+    public void doOrder() {
         log.info("-----------------预约启动-------------------");
         startTime = System.currentTimeMillis();
         doOrderTask.start();
