@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
 
-import static com.troublemaker.utils.httputils.HttpClientUtils.getClientNoSSL;
+import static com.troublemaker.utils.httputils.HttpClientUtils.getClient;
 
 /**
  * @author Troublemaker
@@ -41,7 +41,7 @@ public class OrderTask implements Runnable {
     public void run() {
 
         try {
-            CloseableHttpClient client = getClientNoSSL();
+            CloseableHttpClient client = getClient();
 
             // 登录
             String lt = selectionService.getLt(client, LOGIN_URL);

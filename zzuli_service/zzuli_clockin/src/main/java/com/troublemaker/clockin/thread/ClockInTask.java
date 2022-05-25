@@ -41,7 +41,7 @@ public class ClockInTask implements Runnable {
     @Override
     public void run() {
         try {
-            CloseableHttpClient client = getClientNoSSL();
+            CloseableHttpClient client = getClient();
 
             //登录
             String lt = service.getLt(client, LOGIN_URL);
@@ -79,7 +79,7 @@ public class ClockInTask implements Runnable {
                 }
             }
         } catch (Exception e) {
-            log.info("异常: " + e);
+            log.error("异常: " + e);
             sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
         } finally {
             countDownLatch.countDown();

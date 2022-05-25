@@ -48,6 +48,7 @@ public class HttpClientUtils {
     private static final int SUCCESS_CODE = 200;
 
     static {
+        log.info("-----------------初始化链接池-------------------");
         try {
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
@@ -77,14 +78,13 @@ public class HttpClientUtils {
             // 配置连接池对象   创建ConnectionManager，添加Connection配置信息，
             PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             // 同时最多连接数
-            connectionManager.setMaxTotal(200);
+            connectionManager.setMaxTotal(50);
             // 设置最大路由
-            connectionManager.setDefaultMaxPerRoute(100);
+            connectionManager.setDefaultMaxPerRoute(50);
             // 1、MaxtTotal是整个池子的大小；
             // 2、DefaultMaxPerRoute是根据连接到的主机对MaxTotal的一个细分；比如：
             // MaxtTotal=400 DefaultMaxPerRoute=200
             // 而我只连接到http://www.abc.com时，到这个主机的并发最多只有200；而不是400；
-            // 而我连接到http://www.bac.com 和
             // http://www.ccd.com时，到每个主机的并发最多只有200；即加起来是400（但不能超过400）；所以起作用的设置是DefaultMaxPerRoute
 
             // 配置请求参数
@@ -117,12 +117,15 @@ public class HttpClientUtils {
                     .setDefaultHeaders(headers)
                     // 重定向策略
                     .setRedirectStrategy(new LaxRedirectStrategy());
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            log.info("-----------------初始化链接池失败-------------------");
+            log.error("异常信息：" + e);
             throw new RuntimeException(e);
         }
+        log.info("-----------------初始化链接池成功-------------------");
     }
 
-    public static CloseableHttpClient getClientNoSSL() {
+    public static CloseableHttpClient getClient() {
         return HTTP_CLIENT_BUILDER.build();
     }
 
