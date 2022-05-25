@@ -52,19 +52,7 @@ public class DoClockInTask {
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(corePoolSize, maxMumPoolSize, keepAliveSeconds, TimeUnit.SECONDS, queue, threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
 
         for (User user : users) {
-            // 由于刚进入的线程的执行需要和服务器时间比较
-            // 可能会进行等待 导致 等待队列满 -> 创建线程—> 达到最大线程数 -> 拒绝任务执行
-            // 所以对达到核心线程数的后续任务进行拦截, 待前面的任务执行完毕后即可正常执行
-            // 或者直接将打卡时间推迟, 无需进行设置, 直接打卡即可
-//            if (i == corePoolSize) {
-//                try {
-//                    Thread.sleep(5000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-            // 或CallerRunsPolicy()策略, 即调用者(main)执行该任务
+            // CallerRunsPolicy()策略, 即调用者(main)执行该任务
             poolExecutor.execute(new ClockInTask(user, countDownLatch, sendMail, service));
         }
         try {

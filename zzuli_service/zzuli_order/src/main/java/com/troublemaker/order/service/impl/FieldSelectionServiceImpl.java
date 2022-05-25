@@ -12,8 +12,8 @@ import com.troublemaker.order.exception.MyException;
 import com.troublemaker.order.mapper.BookerMapper;
 import com.troublemaker.order.service.FieldSelectionService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.HttpClient;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 
@@ -61,21 +61,22 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     }
 
     @Override
-    public String getLt(HttpClient client, String url) {
+    public String getLt(CloseableHttpClient client, String url) {
         String entityStr = doGetForEntity(client, url);
         return Jsoup.parse(entityStr).select("[name='lt']").attr("value");
     }
 
     @Override
-    public void login(HttpClient client, String url, Map<String, String> map) {
+    public void login(CloseableHttpClient client, String url, Map<String, String> map) {
         doApplicationPost(client, url, map);
     }
 
     @Override
-    public void getHomePage(HttpClient client, String url) {
+    public void getHomePage(CloseableHttpClient client, String url) {
         doGetForEntity(client, url);
     }
 
+    @Override
     public List<FieldInfo> getSelfSetFieldInfos() {
         List<FieldInfo> fieldInfos = new ArrayList<>();
 //        fieldInfos.add(new FieldInfo("19:30", "20:30", "YMQ017", "羽毛球05-1", "03", "0.00", 1, 0));
@@ -106,7 +107,7 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     }
 
     @Override
-    public List<FieldInfo> getOptionalFieldInfo(HttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod) throws NullPointerException {
+    public List<FieldInfo> getOptionalFieldInfo(CloseableHttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod) throws NullPointerException {
         String selectUrl = "http://cgyy.zzuli.edu.cn/Field/GetVenueState?dateadd=0&TimePeriod=" +
                 timePeriod.getTimePeriodNo() +
                 "&VenueNo=001&FieldTypeNo=" +
@@ -145,7 +146,7 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     }
 
     @Override
-    public String order(HttpClient client, String checkData) throws MyException {
+    public String order(CloseableHttpClient client, String checkData) throws MyException {
         String url = "http://cgyy.zzuli.edu.cn/Field/OrderField?dateadd=0&VenueNo=001&checkdata=" + checkData;
         long endTime = System.currentTimeMillis();
         long difference = timeDifference(url) - (endTime - startTime);
@@ -164,7 +165,7 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     }
 
     @Override
-    public String subMit(HttpClient client, String cardNo, String oId) {
+    public String subMit(CloseableHttpClient client, String cardNo, String oId) {
         String url = "http://cgyy.zzuli.edu.cn/Field/CardPay?" +
                 "PayNo=02" +
                 "&Money=0" +
@@ -186,7 +187,7 @@ public class FieldSelectionServiceImpl extends ServiceImpl<BookerMapper, Booker>
     }
 
     @Override
-    public String getOrdered(HttpClient client) {
+    public String getOrdered(CloseableHttpClient client) {
         String url = "http://cgyy.zzuli.edu.cn/Field/GetFieldOrder?PageNum=1&PageSize=6&Condition=" +
                 "&_=" + System.currentTimeMillis();
         String entityStr = doGetForEntity(client, url);

@@ -6,6 +6,7 @@ import com.troublemaker.order.entity.Booker;
 import com.troublemaker.order.entity.TimePeriod;
 import com.troublemaker.order.exception.MyException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public interface FieldSelectionService {
      * @param: [client, url]
      * @return: java.lang.String
      **/
-    String getLt(HttpClient client, String url);
+    String getLt(CloseableHttpClient client, String url);
 
     /**
      * @description: post  http://kys.zzuli.edu.cn/cas/login
@@ -41,7 +42,7 @@ public interface FieldSelectionService {
      * @param: [client, url, map]
      * @return: void
      **/
-    void login(HttpClient client, String url, Map<String, String> map);
+    void login(CloseableHttpClient client, String url, Map<String, String> map);
 
     /**
      * @description: get  http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1
@@ -51,7 +52,7 @@ public interface FieldSelectionService {
      * @param: [client, url]
      * @return: void
      **/
-    void getHomePage(HttpClient client, String url);
+    void getHomePage(CloseableHttpClient client, String url);
 
     List<FieldInfo> getSelfSetFieldInfos();
 
@@ -67,7 +68,7 @@ public interface FieldSelectionService {
      * @param: [client, fieldTypeNo, timePeriod]
      * @return: java.util.List<com.troublemaker.order.entity.FieldInfo>
      **/
-    List<FieldInfo> getOptionalFieldInfo(HttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod);
+    List<FieldInfo> getOptionalFieldInfo(CloseableHttpClient client, FieldType fieldTypeNo, TimePeriod timePeriod);
 
     /**
      * @description: 将选择的场所java对象转化为服务器接受的json字符串
@@ -104,7 +105,7 @@ public interface FieldSelectionService {
      * @param: [client, checkData]
      * @return: java.lang.String
      **/
-    String order(HttpClient client, String checkData) throws MyException;
+    String order(CloseableHttpClient client, String checkData) throws MyException;
 
     /**
      * @description: get "http://cgyy.zzuli.edu.cn/Field/CardPay?" +
@@ -128,7 +129,7 @@ public interface FieldSelectionService {
      * @param: [client, cardNo, OID]
      * @return: java.lang.String
      **/
-    String subMit(HttpClient client, String cardNo, String oId);
+    String subMit(CloseableHttpClient client, String cardNo, String oId);
 
     /**
      * @description: get "http://cgyy.zzuli.edu.cn/Field/GetFieldOrder?PageNum=1&PageSize=6&Condition=" +
@@ -139,5 +140,5 @@ public interface FieldSelectionService {
      * @param: [client]
      * @return: java.lang.String
      **/
-    String getOrdered(HttpClient client);
+    String getOrdered(CloseableHttpClient client);
 }

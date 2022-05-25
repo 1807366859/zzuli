@@ -7,7 +7,7 @@ import com.troublemaker.utils.mail.SendMail;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 
 import java.util.concurrent.CountDownLatch;
@@ -28,7 +28,7 @@ public class ClockInTask implements Runnable {
     private static final String LOGIN_URL = "http://kys.zzuli.edu.cn/cas/login";
     private static final String CODE_URL = "https://msg.zzuli.edu.cn/xsc/week?spm=1";
     private static final String ADD_URL = "https://msg.zzuli.edu.cn/xsc/add";
-    private static  String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=1";
+    private static String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=1";
 //    private static final String HISTORY_URL = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
     public ClockInTask(User user, CountDownLatch countDownLatch, SendMail sendMail, ClockInService service) {
@@ -41,7 +41,7 @@ public class ClockInTask implements Runnable {
     @Override
     public void run() {
         try {
-            HttpClient client = getClientNoSSL();
+            CloseableHttpClient client = getClientNoSSL();
 
             //登录
             String lt = service.getLt(client, LOGIN_URL);
@@ -79,7 +79,7 @@ public class ClockInTask implements Runnable {
                 }
             }
         } catch (Exception e) {
-            log.info("异常: "+ e);
+            log.info("异常: " + e);
             sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
         } finally {
             countDownLatch.countDown();

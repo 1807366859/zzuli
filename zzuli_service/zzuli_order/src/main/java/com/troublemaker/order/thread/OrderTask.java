@@ -6,8 +6,8 @@ import com.troublemaker.order.service.FieldSelectionService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.HttpClient;
 
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
@@ -39,8 +39,9 @@ public class OrderTask implements Runnable {
 
     @Override
     public void run() {
+
         try {
-            HttpClient client = getClientNoSSL();
+            CloseableHttpClient client = getClientNoSSL();
 
             // 登录
             String lt = selectionService.getLt(client, LOGIN_URL);

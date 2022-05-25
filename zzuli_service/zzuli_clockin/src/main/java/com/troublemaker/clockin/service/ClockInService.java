@@ -4,6 +4,7 @@ import com.troublemaker.clockin.entity.InputData;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import com.troublemaker.clockin.entity.User;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 
 import java.util.List;
@@ -20,17 +21,17 @@ public interface ClockInService {
 
     Map<String, String> loginMap(User user,String lt);
 
-    String getLt(HttpClient client, String url);
+    String getLt(CloseableHttpClient client, String url);
 
-    void login(HttpClient client, String url, Map<String, String> map);
+    void login(CloseableHttpClient client, String url, Map<String, String> map);
 
-    String getCodeLink(HttpClient client, String url);
+    String getCodeLink(CloseableHttpClient client, String url);
 
-    String getToken(HttpClient client, String url);
+    String getToken(CloseableHttpClient client, String url);
 
-    InputData getInfoFromServer(HttpClient client, String url);
+    InputData getInfoFromServer(CloseableHttpClient client, String url);
 
     String finalData(InputData data, User user);
 
-    String submitData(HttpClient client, String url, String params, Header header);
+    String submitData(CloseableHttpClient client, String url, String params, Header header);
 }

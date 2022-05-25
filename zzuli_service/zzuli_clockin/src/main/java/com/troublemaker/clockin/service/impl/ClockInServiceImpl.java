@@ -7,7 +7,7 @@ import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.mapper.UserMapper;
 import com.troublemaker.clockin.service.ClockInService;
 import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
 
@@ -56,25 +56,25 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public String getLt(HttpClient client, String url) {
+    public String getLt(CloseableHttpClient client, String url) {
         String entityStr = doGetForEntity(client, url);
         return Jsoup.parse(entityStr).select("[name='lt']").attr("value");
     }
 
     @Override
-    public void login(HttpClient client, String url, Map<String, String> map) {
+    public void login(CloseableHttpClient client, String url, Map<String, String> map) {
         doApplicationPost(client, url, map);
 //        return Jsoup.parse(entityStr).select("title").html();
     }
 
     @Override
-    public String getCodeLink(HttpClient client, String url) {
+    public String getCodeLink(CloseableHttpClient client, String url) {
         String entityStr = doGetForEntity(client, url);
         return Jsoup.parse(entityStr).select("a[data-href]").attr("data-href");
     }
 
     @Override
-    public String getToken(HttpClient client, String url) {
+    public String getToken(CloseableHttpClient client, String url) {
         String headers = doGetForHeaders(client, url);
         String subHeader = headers.substring(0, headers.indexOf(";"));
         String token = subHeader.substring(subHeader.indexOf("="));
@@ -82,7 +82,7 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public InputData getInfoFromServer(HttpClient client, String url) {
+    public InputData getInfoFromServer(CloseableHttpClient client, String url) {
         String entityStr = doGetForEntity(client, url);
         return parseObject(entityStr, InputData.class);
     }
@@ -97,7 +97,7 @@ public class ClockInServiceImpl extends ServiceImpl<UserMapper, User> implements
     }
 
     @Override
-    public String submitData(HttpClient client, String url, String params, Header header) {
+    public String submitData(CloseableHttpClient client, String url, String params, Header header) {
         //线程抵达时间
         long endTime = System.currentTimeMillis();
         //从程序启动到线程抵达所用时间与服务器的时时间的时差
