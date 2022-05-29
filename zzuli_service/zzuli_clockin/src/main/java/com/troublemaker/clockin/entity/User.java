@@ -2,7 +2,6 @@ package com.troublemaker.clockin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
 
 
@@ -16,15 +15,11 @@ import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 @Data
 public class User {
     @TableId(type = ASSIGN_ID)
-    private String id;
+    private String uid;
     private String username;
     private String password;
     private String email;
-    private String build;
-    private String dorm;
-    private String mobile;
-    @TableField(value = "jt_mobile")
-    @JsonAlias("jt_mobile")
-    private String jtMobile;
+    @TableField(value = "clock_Type")
+    private byte clockType;
 }
 

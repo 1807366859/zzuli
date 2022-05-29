@@ -1,7 +1,6 @@
 package com.troublemaker.clockin.thread;
 
-import com.troublemaker.clockin.entity.InputData;
-import com.troublemaker.clockin.entity.User;
+import com.troublemaker.clockin.entity.*;
 import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.utils.mail.SendMail;
 import lombok.Data;
@@ -25,10 +24,10 @@ public class ClockInTask implements Runnable {
     private CountDownLatch countDownLatch;
     private SendMail sendMail;
     private ClockInService service;
-    private static final String LOGIN_URL = "http://kys.zzuli.edu.cn/cas/login";
-    private static final String CODE_URL = "https://msg.zzuli.edu.cn/xsc/week?spm=1";
-    private static final String ADD_URL = "https://msg.zzuli.edu.cn/xsc/add";
-    private static String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=1";
+    private String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
+    private String codeUrl = "https://msg.zzuli.edu.cn/xsc/week?spm=";
+    private String addUrl = "https://msg.zzuli.edu.cn/xsc/add";
+    private String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=";
 //    private static final String HISTORY_URL = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
     public ClockInTask(User user, CountDownLatch countDownLatch, SendMail sendMail, ClockInService service) {
@@ -36,6 +35,8 @@ public class ClockInTask implements Runnable {
         this.countDownLatch = countDownLatch;
         this.sendMail = sendMail;
         this.service = service;
+        codeUrl += user.getClockType();
+        userInfoUrl += user.getClockType();
     }
 
     @Override
@@ -43,31 +44,39 @@ public class ClockInTask implements Runnable {
         try {
             CloseableHttpClient client = getClient();
 
-            //登录
-            String lt = service.getLt(client, LOGIN_URL);
-            service.login(client, LOGIN_URL, service.loginMap(user, lt));
+            // 登录
+            String lt = service.getLt(client, loginUrl);
+            service.login(client, loginUrl, service.loginMap(user, lt));
 
-            //获得打卡链接
-            String link = service.getCodeLink(client, CODE_URL);
+            // 获得含有code的链接，code=8055141d21s21sd411dd63
+            String link = service.getCodeLink(client, codeUrl);
 
-            //获得TOKEN
+            // 获得TOKEN
             String token = service.getToken(client, link);
             Header header = getHeader("X-XSRF-TOKEN", token);
 
-            //拼接url
+            // 将code拼接到url上
             userInfoUrl += link.substring(link.lastIndexOf("&"));
 
-            //从服务器获得打卡数据
-            InputData inputData = service.getInfoFromServer(client, userInfoUrl);
+            String inputData;
+            if (1 == user.getClockType()) {
+                // 从服务器获得打卡数据
+                SchoolInputData schoolInputData = service.getSchoolInfoFromServer(client, userInfoUrl);
+                // 填充其他字段数据
+                School school = service.getSchoolByUserId(user.getUid());
+                inputData = service.SchoolFinalData(schoolInputData, school);
+            } else {
+                HomeInputData homeInputData = service.getHomeInfoFromServer(client, userInfoUrl);
+                Home home = service.getHomeByUserId(user.getUid());
+                inputData = service.HomeFinalData(homeInputData, home);
+            }
+            log.info(inputData);
 
-            //填充其他字段数据
-            String finalData = service.finalData(inputData, user);
-
-            //提交到服务器
+            // 提交到服务器
             int count = 0;
             while (true) {
                 count++;
-                String clockInfo = service.submitData(client, ADD_URL, finalData, header);
+                String clockInfo = service.submitData(client, addUrl, inputData, header);
                 if ("{\"code\":0,\"message\":\"ok\"}".equals(clockInfo)) {
                     log.info(user.getUsername() + " " + clockInfo);
                     sendMail.sendSimpleMail(user.getEmail(), "🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");

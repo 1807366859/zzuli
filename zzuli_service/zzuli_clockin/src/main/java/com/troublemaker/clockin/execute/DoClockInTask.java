@@ -4,6 +4,7 @@ import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;
 import com.troublemaker.clockin.thread.ClockInTask;
 import com.troublemaker.utils.mail.SendMail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.*;
  * @date 2022- 04 30 22:16
  */
 @Component
+@Slf4j
 public class DoClockInTask {
     private ClockInService service;
     private SendMail sendMail;
@@ -52,6 +54,11 @@ public class DoClockInTask {
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(corePoolSize, maxMumPoolSize, keepAliveSeconds, TimeUnit.SECONDS, queue, threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
 
         for (User user : users) {
+            if (user.getClockType() == 2) {
+                log.info(user.getUsername() + " " + "跳过打卡");
+                countDownLatch.countDown();
+                continue;
+            }
             // CallerRunsPolicy()策略, 即调用者(main)执行该任务
             poolExecutor.execute(new ClockInTask(user, countDownLatch, sendMail, service));
         }

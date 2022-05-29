@@ -1,9 +1,10 @@
 package com.troublemaker.clockin.controller;
 
-import com.troublemaker.clockin.entity.User;
 import com.troublemaker.clockin.service.ClockInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author Troublemaker
@@ -20,9 +21,9 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping("/addUserInfo")
-    public Integer addUserInfo(@RequestBody User user) {
-        return service.addUser(user);
+    @PostMapping("/addClockInfo")
+    public Integer addUserInfo(@RequestBody Map<String,String> map) {
+        return service.addSchoolClockInfo(map);
     }
 }
 

@@ -1,9 +1,7 @@
 package com.troublemaker.clockin.service;
 
-import com.troublemaker.clockin.entity.InputData;
+import com.troublemaker.clockin.entity.*;
 import org.apache.http.Header;
-import org.apache.http.client.HttpClient;
-import com.troublemaker.clockin.entity.User;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 
@@ -15,11 +13,18 @@ import java.util.Map;
  * @date 2022- 04 28 21:08
  */
 public interface ClockInService {
-    Integer addUser(User user);
+
+    Integer addSchoolClockInfo(Map<String,String> map);
+
+    Integer addHomeClockInfo(Map<String,String> map);
 
     List<User> getUsers();
 
-    Map<String, String> loginMap(User user,String lt);
+    School getSchoolByUserId(String uid);
+
+    Home getHomeByUserId(String uid);
+
+    Map<String, String> loginMap(User user, String lt);
 
     String getLt(CloseableHttpClient client, String url);
 
@@ -29,9 +34,13 @@ public interface ClockInService {
 
     String getToken(CloseableHttpClient client, String url);
 
-    InputData getInfoFromServer(CloseableHttpClient client, String url);
+    SchoolInputData getSchoolInfoFromServer(CloseableHttpClient client, String url);
 
-    String finalData(InputData data, User user);
+    HomeInputData getHomeInfoFromServer(CloseableHttpClient client, String url);
+
+    String SchoolFinalData(SchoolInputData data, School school);
+
+    String HomeFinalData(HomeInputData data, Home home);
 
     String submitData(CloseableHttpClient client, String url, String params, Header header);
 }
