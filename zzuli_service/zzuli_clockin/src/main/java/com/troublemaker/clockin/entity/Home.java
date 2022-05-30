@@ -29,7 +29,7 @@ public class Home {
     private String jzCity;
     @TableField(value = "jz_district")
     private String jzDistrict;
-    @TableField(value = "s_uid")
-    private String sUid;
+    @TableField(value = "h_uid")
+    private String hUid;
 }
 

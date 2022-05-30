@@ -52,18 +52,19 @@ public class ClockInApplicationTests {
     @Test
     void test1(){
         Map<String, String> map = new HashMap<>();
-        map.put("username","332103030216");
-        map.put("password","014552");
-        map.put("email","727881985@qq.com");
+        map.put("username","332103060280");
+        map.put("password","715766");
+        map.put("email","1876828495@qq.com");
         map.put("clock_Type","0");
-        map.put("mobile","15903750964");
-        map.put("jt_mobile","13949471106");
-        map.put("lat","33.720619");
-        map.put("lon","113.347107");
-        map.put("jz_address","中国河南省平顶山市湛河区高阳路街道神马大道辅路");
+        map.put("mobile","13903838843");
+        map.put("jt_mobile","13015150370");
+
+        map.put("lat","33.71302");
+        map.put("lon","115.175072");
+        map.put("jz_address","中国河南省周口市郸城县胡集乡");
         map.put("jz_province","河南省");
-        map.put("jz_city","平顶山市");
-        map.put("jz_district","湛河区");
+        map.put("jz_city","周口市");
+        map.put("jz_district","郸城县");
         service.addHomeClockInfo(map);
     }
 }

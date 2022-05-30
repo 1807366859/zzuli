@@ -100,10 +100,10 @@ public class ClockInServiceImpl implements ClockInService {
             user.setPassword(map.get("password"));
             user.setEmail(map.get("email"));
             user.setClockType(Byte.parseByte(map.get("clock_Type")));
-            home.setSUid(user.getUid());
+            home.setHUid(user.getUid());
             r1 = userMapper.insert(user);
         }else {
-            home.setSUid(one.getUid());
+            home.setHUid(one.getUid());
         }
         r2 = homeMapper.insert(home);
         return (r1 == 1 && r2 == 1) ? 1 : 0;
@@ -124,7 +124,7 @@ public class ClockInServiceImpl implements ClockInService {
     @Override
     public Home getHomeByUserId(String uid) {
         QueryWrapper<Home> wrapper = new QueryWrapper<>();
-        wrapper.eq("s_uid", uid);
+        wrapper.eq("h_uid", uid);
         return homeMapper.selectOne(wrapper);
     }
 

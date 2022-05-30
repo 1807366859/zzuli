@@ -21,9 +21,14 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping("/addClockInfo")
-    public Integer addUserInfo(@RequestBody Map<String,String> map) {
+    @PostMapping("/addSchoolClockInfo")
+    public Integer addSchoolClockInfo(@RequestBody Map<String,String> map) {
         return service.addSchoolClockInfo(map);
+    }
+
+    @PostMapping("/addHomeClockInfo")
+    public Integer addHomeClockInfo(@RequestBody Map<String,String> map) {
+        return service.addHomeClockInfo(map);
     }
 }
 
