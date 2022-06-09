@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import static com.troublemaker.utils.httputils.HttpClientUtils.getClient;
 
 /**
  * @author Troublemaker
@@ -27,22 +28,24 @@ public class OrderTask implements Runnable {
     private CountDownLatch countDownLatch;
     private FieldSelectionService selectionService;
     private FieldInfo fieldInfo;
+    private HttpClientBuilder clientBuilder;
+    private CloseableHttpClient client = null;
     private static final String LOGIN_URL = "http://kys.zzuli.edu.cn/cas/login";
     private static final String HOME_URL = "http://cgyy.zzuli.edu.cn/User/UserChoose?LoginType=1";
 
-    public OrderTask(Booker booker, CountDownLatch countDownLatch, FieldSelectionService selectionService, FieldInfo fieldInfo) {
+    public OrderTask(Booker booker, CountDownLatch countDownLatch, FieldSelectionService selectionService, FieldInfo fieldInfo, HttpClientBuilder clientBuilder) {
         this.booker = booker;
         this.countDownLatch = countDownLatch;
         this.selectionService = selectionService;
         this.fieldInfo = fieldInfo;
+        this.clientBuilder = clientBuilder;
     }
 
     @Override
     public void run() {
 
         try {
-            CloseableHttpClient client = getClient();
-
+            client = clientBuilder.build();
             // 登录
             String lt = selectionService.getLt(client, LOGIN_URL);
             selectionService.login(client, LOGIN_URL, selectionService.loginMap(booker, lt));
@@ -72,7 +75,13 @@ public class OrderTask implements Runnable {
         } catch (Exception e) {
             log.error(booker.getUsername() + " 预约失败 " + fieldInfo.getFieldName() + " 异常信息: " + e);
         } finally {
-            countDownLatch.countDown();
+            if (client != null) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    log.error("异常: " + e);
+                }
+            }
         }
     }
 }

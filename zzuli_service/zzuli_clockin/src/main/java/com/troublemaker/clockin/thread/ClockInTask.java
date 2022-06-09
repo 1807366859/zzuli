@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 
-import java.util.concurrent.CountDownLatch;
+import java.io.IOException;
 
 import static com.troublemaker.utils.httputils.HttpClientUtils.*;
 
@@ -21,20 +22,21 @@ import static com.troublemaker.utils.httputils.HttpClientUtils.*;
 @Slf4j
 public class ClockInTask implements Runnable {
     private User user;
-    private CountDownLatch countDownLatch;
     private SendMail sendMail;
     private ClockInService service;
+    private HttpClientBuilder clientBuilder;
+    private CloseableHttpClient client = null;
     private String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
     private String codeUrl = "https://msg.zzuli.edu.cn/xsc/week?spm=";
     private String addUrl = "https://msg.zzuli.edu.cn/xsc/add";
     private String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=";
 //    private static final String HISTORY_URL = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
-    public ClockInTask(User user, CountDownLatch countDownLatch, SendMail sendMail, ClockInService service) {
+    public ClockInTask(User user, SendMail sendMail, ClockInService service, HttpClientBuilder clientBuilder) {
         this.user = user;
-        this.countDownLatch = countDownLatch;
         this.sendMail = sendMail;
         this.service = service;
+        this.clientBuilder = clientBuilder;
         codeUrl += user.getClockType();
         userInfoUrl += user.getClockType();
     }
@@ -42,8 +44,7 @@ public class ClockInTask implements Runnable {
     @Override
     public void run() {
         try {
-            CloseableHttpClient client = getClient();
-
+            client = clientBuilder.build();
             // 登录
             String lt = service.getLt(client, loginUrl);
             service.login(client, loginUrl, service.loginMap(user, lt));
@@ -70,8 +71,6 @@ public class ClockInTask implements Runnable {
                 Home home = service.getHomeByUserId(user.getUid());
                 inputData = service.HomeFinalData(homeInputData, home);
             }
-            log.info(inputData);
-
             // 提交到服务器
             int count = 0;
             while (true) {
@@ -91,7 +90,13 @@ public class ClockInTask implements Runnable {
             log.error("异常: " + e);
             sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
         } finally {
-            countDownLatch.countDown();
+            if (client != null) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    log.error("异常: " + e);
+                }
+            }
         }
     }
 }

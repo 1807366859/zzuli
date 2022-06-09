@@ -19,7 +19,6 @@ public class User {
     private String username;
     private String password;
     private String email;
-    @TableField(value = "clock_Type")
     private byte clockType;
 }
 

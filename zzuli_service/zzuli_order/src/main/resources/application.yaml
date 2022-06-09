@@ -1,11 +1,14 @@
+# 端口号
+server:
+  port: 6666
 spring:
+  # 数据源
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/zzuli?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: zzuli
     password: zzuli
-  profiles:
-    active: dev
+  # 发送邮件配置
   mail:
     port: 465
     host: smtp.qq.com
@@ -26,11 +29,7 @@ spring:
               port: 465
               class: javax.net.ssl.SSLSocketFactory
         debug: true
-server:
-  port: 6666
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: false # 数据库下划线自动转驼峰标示关闭
+# 日志配置文件的位置
 logging:
   config: classpath:logback-spring.xml
 

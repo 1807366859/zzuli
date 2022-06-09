@@ -21,19 +21,13 @@ public class School {
     private String build;
     private String dorm;
     private String mobile;
-    @TableField(value = "jt_mobile")
     private String jtMobile;
     private String lat;
     private String lon;
-    @TableField(value = "jz_address")
     private String jzAddress;
-    @TableField(value = "jz_province")
     private String jzProvince;
-    @TableField(value = "jz_city")
     private String jzCity;
-    @TableField(value = "jz_district")
     private String jzDistrict;
-    @TableField(value = "s_uid")
     private String sUid;
 }
 

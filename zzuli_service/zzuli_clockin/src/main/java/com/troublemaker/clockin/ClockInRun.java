@@ -28,6 +28,5 @@ public class ClockInRun {
         log.info("-----------------打卡启动-------------------");
         startTime = System.currentTimeMillis();
         doClockInTask.start();
-        log.info("-----------------打卡完成-------------------");
     }
 }
