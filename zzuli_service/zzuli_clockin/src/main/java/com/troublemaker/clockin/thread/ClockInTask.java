@@ -26,9 +26,11 @@ public class ClockInTask implements Runnable {
     private ClockInService service;
     private HttpClientBuilder clientBuilder;
     private CloseableHttpClient client = null;
-    private String loginUrl = "http://kys.zzuli.edu.cn/cas/login";
+    private static final String SUCCESS = "{\"code\":0,\"message\":\"ok\"}";
+    private String clockInfo = null;
+    private static final String LOGIN_URL = "http://kys.zzuli.edu.cn/cas/login";
     private String codeUrl = "https://msg.zzuli.edu.cn/xsc/week?spm=";
-    private String addUrl = "https://msg.zzuli.edu.cn/xsc/add";
+    private static final String ADD_URL = "https://msg.zzuli.edu.cn/xsc/add";
     private String userInfoUrl = "https://msg.zzuli.edu.cn/xsc/get_user_info?wj_type=";
 //    private static final String HISTORY_URL = "https://msg.zzuli.edu.cn/xsc/log?type=0&code=";
 
@@ -46,8 +48,8 @@ public class ClockInTask implements Runnable {
         try {
             client = clientBuilder.build();
             // 登录
-            String lt = service.getLt(client, loginUrl);
-            service.login(client, loginUrl, service.loginMap(user, lt));
+            String lt = service.getLt(client, LOGIN_URL);
+            service.login(client, LOGIN_URL, service.loginMap(user, lt));
 
             // 获得含有code的链接，code=8055141d21s21sd411dd63
             String link = service.getCodeLink(client, codeUrl);
@@ -75,8 +77,8 @@ public class ClockInTask implements Runnable {
             int count = 0;
             while (true) {
                 count++;
-                String clockInfo = service.submitData(client, addUrl, inputData, header);
-                if ("{\"code\":0,\"message\":\"ok\"}".equals(clockInfo)) {
+                clockInfo = service.submitData(client, ADD_URL, inputData, header);
+                if (SUCCESS.equals(clockInfo)) {
                     log.info(user.getUsername() + " " + clockInfo);
                     sendMail.sendSimpleMail(user.getEmail(), "🦄🦄🦄旋转木马提醒你,打卡成功💕💕💕");
                     break;
@@ -88,7 +90,9 @@ public class ClockInTask implements Runnable {
             }
         } catch (Exception e) {
             log.error("异常: " + e);
-            sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
+            if (!SUCCESS.equals(clockInfo)) {
+                sendMail.sendSimpleMail(user.getEmail(), "由于不可抗力影响😤,打卡失败😅,请自行打卡🙌");
+            }
         } finally {
             if (client != null) {
                 try {

@@ -34,6 +34,7 @@ public class ClockInApplicationTests {
         map.put("password","014552");
         map.put("email","727881985@qq.com");
         map.put("clock_Type","1");
+
         map.put("region","科学校区");
         map.put("area","宿舍区");
         map.put("build","11号楼");
@@ -56,9 +57,9 @@ public class ClockInApplicationTests {
         map.put("password","715766");
         map.put("email","1876828495@qq.com");
         map.put("clock_Type","0");
+
         map.put("mobile","13903838843");
         map.put("jt_mobile","13015150370");
-
         map.put("lat","33.71302");
         map.put("lon","115.175072");
         map.put("jz_address","中国河南省周口市郸城县胡集乡");

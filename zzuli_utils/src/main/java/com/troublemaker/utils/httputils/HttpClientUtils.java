@@ -26,8 +26,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -181,7 +181,7 @@ public class HttpClientUtils {
         HttpEntity entity;
         String entityStr = null;
         try {
-            HttpPost  httpPost = new HttpPost(url);
+            HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-type", "application/json; charset=utf-8");
             httpPost.setHeader(header);
             httpPost.setEntity(new StringEntity(params, StandardCharsets.UTF_8));
@@ -225,17 +225,21 @@ public class HttpClientUtils {
 
     public static long timeDifference(String str) {
         URL url;
-        URLConnection urlConnection;
+        HttpURLConnection urlConnection = null;
         long localDate = 0;
         long severDate = 0;
         try {
             url = new URL(str);
-            urlConnection = url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             localDate = System.currentTimeMillis();
             urlConnection.connect();
             severDate = urlConnection.getDate();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         long difference = localDate - severDate;
         return difference > 0 ? difference : 0;

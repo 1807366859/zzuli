@@ -38,8 +38,8 @@ logging:
   config: classpath:logback-spring.xml
 pool:
   # thread 线程池配置
-  corePoolSize: 8
-  maximumPoolSize: 8
+  corePoolSize: 10
+  maximumPoolSize: 10
   keepAliveTime: 60
   capacity: 100
 
